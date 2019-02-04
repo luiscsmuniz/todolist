@@ -4,21 +4,23 @@ module Api::V1
   class TasksController < ApplicationController
     before_action :set_task, only: %i[show update destroy]
 
-    # GET /task
-    def index
-      @task = Task.order(:id)
+    # GET /api/v1/tasks
 
-      render json: @task
+    def index
+      @tasks = Task.order(:id)
+
+      render json: @tasks
     end
 
-    # GET /Tasks/1
+    # GET /api/v1/task/1
+
     def show
       render json: @task
     end
 
-    # POST /task
+    # POST /api/v1/tasks
     def create
-      @task = Task.new(task_params)
+      @task.new(task_params)
 
       if @task.save
         render json: @task, status: :created
@@ -27,18 +29,19 @@ module Api::V1
       end
     end
 
-    # PATCH/PUT /task/1
+    # PATCH/PUT /api/v1/task/1
     def update
-      if @task.update(task_params)
+      if @task.new(task_params)
         render json: @task
       else
         render json: @task.errors, status: :unprocessable_entity
       end
     end
 
-    # DELETE /task/1
+    # DELETE /api/v1/task/1
     def destroy
       @task.destroy
+
       if @task.destroy
         head :no_content, status: :ok
       else
@@ -48,14 +51,12 @@ module Api::V1
 
     private
 
-    # Use callbacks to share common setup or constraints between actions.
-    def set_task
-      @task = task.find(params[:id])
+    def set_list
+      @list = List.find(params[:id])
     end
 
-    # Only allow a trusted parameter "white task" through.
     def task_params
-      params.require(:task).permit(:title, :excerpt, :description, :upvotes)
+      params.require(:list).permit(:description)
     end
   end
 end
