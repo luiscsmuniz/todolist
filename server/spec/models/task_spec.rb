@@ -41,5 +41,11 @@ RSpec.describe Task do
       task.status = 1
       expect(task.save).to eql(true)
     end
+
+    it 'update status success' do
+      task = Task.create(description: 'description test', status: 0)
+      task.status = 2
+      expect(task.save).to eql(false)
+    end
   end
 end
