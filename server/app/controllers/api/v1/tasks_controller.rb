@@ -56,7 +56,7 @@ module Api::V1
     end
 
     def task_params
-      params.require(:list).permit(:description)
+      params.require(:task).permit(:description)
     end
   end
 end

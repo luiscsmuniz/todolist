@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Task do
   context '#save' do
-    it 'when is succesful' do
+    it 'when is successful' do
       expect(Task.new(description: 'description').save).to eql(true)
     end
 
