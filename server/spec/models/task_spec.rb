@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Task do
   context '#save' do
     it 'save task successful' do
-      expect(Task.new(description: 'description', status: 0).save).to eql(true)
+      expect(Task.new(description: 'description', status: :in_progress).save).to eql(true)
     end
 
     it 'when is' do
@@ -25,26 +25,26 @@ RSpec.describe Task do
 
   context '#update' do
     it 'update description success' do
-      task = Task.create(description: 'description test', status: 0)
+      task = Task.create(description: 'description test', status: :in_progress)
       task.description = 'teste 2'
       expect(task.save).to eql(true)
     end
 
     it 'update description fail' do
-      task = Task.create(description: 'description test', status: 0)
+      task = Task.create(description: 'description test', status: :in_progress)
       task.description = nil
       expect(task.save).to eql(false)
     end
 
     it 'update status success' do
-      task = Task.create(description: 'description test', status: 0)
-      task.status = 1
+      task = Task.create(description: 'description test', status: :in_progress)
+      task.status = :completed
       expect(task.save).to eql(true)
     end
 
     it 'update status fail' do
-      task = Task.create(description: 'description test', status: 0)
-      task.status = 2
+      task = Task.create(description: 'description test', status: :in_progress)
+      task.status = nil
       expect(task.save).to eql(false)
     end
   end
