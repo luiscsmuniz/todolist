@@ -2,7 +2,7 @@
 
 FactoryBot.define do
   factory :task do
-    sequence(:description) { |n| "Description test #{n}" }
+    description { 'description test' }
     status { :in_progress }
   end
 end
