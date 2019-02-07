@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Api::V1::TasksController, type: :request do
-  let! { @task = FactoryBot.create(:task) }
+  let!(:task) { @task = FactoryBot.create(:task) }
 
   context '#create' do
     it 'POST tasks create' do
