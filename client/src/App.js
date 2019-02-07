@@ -1,30 +1,72 @@
 import React, { Component } from 'react'
-import logo from './logo.svg'
+import { Container, Row, Col, Input, ListGroup, ListGroupItem } from 'reactstrap'
 import './App.css'
 
 class App extends Component {
+  constructor(propos) {
+    super(propos)
+    this.state = {
+      newTask: '',
+      tasks: [],
+    }
+  }
+
+  handleKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      if (this.state.newTask) {
+        this.save()
+      }
+    }
+  }
+
+  handleChange = (event) => {
+    this.setState(
+      {
+        newTask: event.target.value,
+      },
+    )
+  }
+
+  resetFieldTask() {
+    this.setState({
+      newTask: '',
+    })
+  }
+
+  save() {
+    const { newTask } = this.state
+
+    this.setState(prevState => ({
+      tasks: [
+        newTask,
+        ...prevState.tasks,
+      ],
+    }))
+
+    this.resetFieldTask()
+  }
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit
-            {' '}
-            <code>src/App.js</code>
-            {' '}
-and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <Container className="body-bg">
+        <Row>
+          <Col md={{ size: 6, offset: 3 }}>
+            <h1 className="text-center" style={{ color: 'white' }}>Todolist</h1>
+          </Col>
+        </Row>
+        <Row>
+          <Col md={{ size: 6, offset: 3 }}>
+            <Input type="text" value={this.state.newTask} onKeyPress={this.handleKeyPress} onChange={this.handleChange} placeholder="Digite a tarefa e pressione enter" />
+          </Col>
+        </Row>
+        <Row>
+          <Col md={{ size: 6, offset: 3 }} className="spacing-10">
+            <ListGroup>
+              { this.state.tasks.map((task) => <ListGroupItem className="ListGroupItens" key={task.id}>{ task }</ListGroupItem>)}
+            </ListGroup>
+          </Col>
+        </Row>
+      </Container>
     )
   }
 }
