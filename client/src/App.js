@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Container, Row, Col, Input, ListGroup, ListGroupItem } from 'reactstrap'
+import shortid from 'shortid'
 import './App.css'
 
 class App extends Component {
@@ -7,6 +8,7 @@ class App extends Component {
     super(propos)
     this.state = {
       newTask: '',
+      id: 1,
       tasks: [],
     }
   }
@@ -23,6 +25,7 @@ class App extends Component {
     this.setState(
       {
         newTask: event.target.value,
+        id: shortid.generate(),
       },
     )
   }
@@ -34,11 +37,11 @@ class App extends Component {
   }
 
   save() {
-    const { newTask } = this.state
+    const { id, newTask } = this.state
 
     this.setState(prevState => ({
       tasks: [
-        newTask,
+        { id, newTask },
         ...prevState.tasks,
       ],
     }))
@@ -62,7 +65,7 @@ class App extends Component {
         <Row>
           <Col md={{ size: 6, offset: 3 }} className="spacing-10">
             <ListGroup>
-              { this.state.tasks.map((task) => <ListGroupItem className="ListGroupItens" key={task.id}>{ task }</ListGroupItem>)}
+              { this.state.tasks.map((task) => <ListGroupItem className="ListGroupItens" key={task.id}>{ task.newTask }</ListGroupItem>)}
             </ListGroup>
           </Col>
         </Row>
