@@ -9,6 +9,7 @@ class App extends Component {
   constructor(propos) {
     super(propos)
     this.state = {
+      editMode: false,
       tasks: [],
       description: '',
     }
@@ -24,6 +25,16 @@ class App extends Component {
         this.createTask()
         this.resetFieldTask()
       }
+    }
+  }
+
+  handleKeyDownTask = (event) => {
+    if (event.key === 'Enter') {
+      this.updateTask(event.target.id, event.target.value)
+    } else if (event.key === 'Escape') {
+      this.setState({
+        editMode: false,
+      })
     }
   }
 
@@ -50,6 +61,12 @@ class App extends Component {
     }
   }
 
+  handleEditMode = () => {
+    this.setState({
+      editMode: true,
+    })
+  }
+
   createTask = () => {
     const { description } = this.state
     fetch(API, {
@@ -57,12 +74,14 @@ class App extends Component {
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({ description, status: 0 }),
     }).then(response => response.json())
-      .then(data => this.setState(prevState => ({
-        tasks: [
-          data,
-          ...prevState.tasks,
-        ],
-      })))
+      .then(
+        data => this.setState(prevState => ({
+          tasks: [
+            data,
+            ...prevState.tasks,
+          ],
+        })),
+      )
   }
 
   getTask = (idTask = '') => {
@@ -102,40 +121,85 @@ class App extends Component {
       )
   }
 
+  updateTask = (idTask, description) => {
+    fetch(API + idTask, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ description }),
+    })
+      .then(
+        data => {
+          if (data.status === 200) {
+            this.setState({
+              editMode: false,
+            })
+            this.getTask()
+          }
+        },
+      )
+  }
+
   resetFieldTask() {
     this.setState({
       description: '',
     })
   }
 
+  renderTitle = () => (
+    <Col md={{ size: 6, offset: 3 }}>
+      <h1 className="text-center" style={{ color: 'white' }}>Todolist</h1>
+    </Col>
+  )
+
+  renderInput = () => (
+    <Col md={{ size: 6, offset: 3 }}>
+      <Input type="text" value={this.state.description} onKeyPress={this.handleKeyPress} onChange={this.handleChange} placeholder="Digite a tarefa e pressione enter" />
+    </Col>
+  )
+
+  renderButton = (id) => (
+    <Button color="danger" value={id} onClick={this.handleDelete} className="float-right">Excluir</Button>
+  )
+
+  renderSwitch = (status, id) => (
+    <Switch
+      onChange={this.handleChecked}
+      checked={status === 'completed'}
+      id={String(id)}
+    />
+  )
+
+  renderTask = (description, id) => {
+    if (this.state.editMode) {
+      return <Input type="text" id={id} onKeyDown={this.handleKeyDownTask} defaultValue={description} />
+    }
+    return <div onDoubleClick={this.handleEditMode} id={String(id)}>{ description }</div>
+  }
+
+  renderList = () => (
+    <ListGroup>
+      { this.state.tasks.map((task) => (
+        <ListGroupItem key={task.id}>
+          {this.renderTask(task.description, task.id)}
+          {this.renderSwitch(task.status, task.id)}
+          {this.renderButton(task.id)}
+        </ListGroupItem>
+      ))}
+    </ListGroup>
+  )
+
   render() {
     return (
       <Container className="body-bg">
         <Row>
-          <Col md={{ size: 6, offset: 3 }}>
-            <h1 className="text-center" style={{ color: 'white' }}>Todolist</h1>
-          </Col>
+          {this.renderTitle()}
         </Row>
         <Row>
-          <Col md={{ size: 6, offset: 3 }}>
-            <Input type="text" value={this.state.description} onKeyPress={this.handleKeyPress} onChange={this.handleChange} placeholder="Digite a tarefa e pressione enter" />
-          </Col>
+          {this.renderInput()}
         </Row>
         <Row>
           <Col md={{ size: 6, offset: 3 }} className="spacing-10">
-            <ListGroup>
-              { this.state.tasks.map((task) => (
-                <ListGroupItem className="ListGroupItens" key={task.id}>
-                  <Switch
-                    onChange={this.handleChecked}
-                    checked={task.status === 'completed'}
-                    id={String(task.id)}
-                  />
-                  <span className="spaccing-left-10">{ task.description }</span>
-                  <Button color="danger" value={task.id} onClick={this.handleDelete} className="float-right">x</Button>
-                </ListGroupItem>
-              ))}
-            </ListGroup>
+            {this.renderList()}
           </Col>
         </Row>
       </Container>
