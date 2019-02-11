@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Button, Container, Row, Col, Input, ListGroup, ListGroupItem } from 'reactstrap'
 import Switch from 'react-switch'
+import TaskTitle from './components/TaskTitle'
+import EditMode from './components/EditMode'
 import './App.css'
 
 const API = 'http://localhost:3001/api/v1/tasks/'
@@ -9,7 +11,6 @@ class App extends Component {
   constructor(propos) {
     super(propos)
     this.state = {
-      editMode: false,
       tasks: [],
       description: '',
     }
@@ -25,16 +26,6 @@ class App extends Component {
         this.createTask()
         this.resetFieldTask()
       }
-    }
-  }
-
-  handleKeyDownTask = (event) => {
-    if (event.key === 'Enter') {
-      this.updateTask(event.target.id, event.target.value)
-    } else if (event.key === 'Escape') {
-      this.setState({
-        editMode: false,
-      })
     }
   }
 
@@ -59,12 +50,6 @@ class App extends Component {
     if (confirm) {
       this.deleteTask(event.target.value)
     }
-  }
-
-  handleEditMode = () => {
-    this.setState({
-      editMode: true,
-    })
   }
 
   createTask = () => {
@@ -121,35 +106,11 @@ class App extends Component {
       )
   }
 
-  updateTask = (idTask, description) => {
-    fetch(API + idTask, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description }),
-    })
-      .then(
-        data => {
-          if (data.status === 200) {
-            this.setState({
-              editMode: false,
-            })
-            this.getTask()
-          }
-        },
-      )
-  }
-
   resetFieldTask() {
     this.setState({
       description: '',
     })
   }
-
-  renderTitle = () => (
-    <Col md={{ size: 6, offset: 3 }}>
-      <h1 className="text-center" style={{ color: 'white' }}>Todolist</h1>
-    </Col>
-  )
 
   renderInput = () => (
     <Col md={{ size: 6, offset: 3 }}>
@@ -169,12 +130,9 @@ class App extends Component {
     />
   )
 
-  renderTask = (description, id) => {
-    if (this.state.editMode) {
-      return <Input type="text" id={id} onKeyDown={this.handleKeyDownTask} defaultValue={description} />
-    }
-    return <div onDoubleClick={this.handleEditMode} id={String(id)}>{ description }</div>
-  }
+  renderTask = (description, id) => (
+    <EditMode description={description} id={id} api={API} />
+  )
 
   renderList = () => (
     <ListGroup>
@@ -192,7 +150,7 @@ class App extends Component {
     return (
       <Container className="body-bg">
         <Row>
-          {this.renderTitle()}
+          <TaskTitle title="Todolist-MVC" size="10" offset="1" class="text-center" color="white" />
         </Row>
         <Row>
           {this.renderInput()}
