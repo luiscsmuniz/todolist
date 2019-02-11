@@ -31,6 +31,10 @@
   margin-top: 10px;
 }
 
+.spacing-left-10 {
+  margin-left: 10px;
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

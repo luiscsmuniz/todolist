@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Button, Container, Row, Col, Input, ListGroup, ListGroupItem } from 'reactstrap'
+import Switch from 'react-switch'
 import './App.css'
 
 const API = 'http://localhost:3001/api/v1/tasks/'
@@ -34,6 +35,14 @@ class App extends Component {
     )
   }
 
+  handleChecked = (checked, event, id) => {
+    if (checked) {
+      this.updateStatus(id, 1)
+    } else {
+      this.updateStatus(id, 0)
+    }
+  }
+
   handleDelete = (event) => {
     const confirm = window.confirm('Deseja excluir a tarefa?')
     if (confirm) {
@@ -65,13 +74,31 @@ class App extends Component {
   }
 
   deleteTask = (idTask) => {
-    // let deleteTask
     fetch(API + idTask, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     })
       .then(
-        // Terminar o delete
+        data => {
+          if (data.status === 204) {
+            this.getTask()
+          }
+        },
+      )
+  }
+
+  updateStatus = (idTask, status) => {
+    fetch(API + idTask, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    })
+      .then(
+        data => {
+          if (data.status === 200) {
+            this.getTask()
+          }
+        },
       )
   }
 
@@ -99,7 +126,12 @@ class App extends Component {
             <ListGroup>
               { this.state.tasks.map((task) => (
                 <ListGroupItem className="ListGroupItens" key={task.id}>
-                  { task.description }
+                  <Switch
+                    onChange={this.handleChecked}
+                    checked={task.status === 'completed'}
+                    id={String(task.id)}
+                  />
+                  <span className="spaccing-left-10">{ task.description }</span>
                   <Button color="danger" value={task.id} onClick={this.handleDelete} className="float-right">x</Button>
                 </ListGroupItem>
               ))}
