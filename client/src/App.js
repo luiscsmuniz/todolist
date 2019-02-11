@@ -131,7 +131,7 @@ class App extends Component {
   )
 
   renderTask = (description, id) => (
-    <EditMode description={description} id={id} api={API} />
+    <EditMode description={description} id={id} api={API} onUpdate={this.getTask} />
   )
 
   renderList = () => (
@@ -150,7 +150,7 @@ class App extends Component {
     return (
       <Container className="body-bg">
         <Row>
-          <TaskTitle title="Todolist-MVC" size="10" offset="1" class="text-center" color="white" />
+          <TaskTitle title="Todolist" size="10" offset="1" class="text-center" color="white" />
         </Row>
         <Row>
           {this.renderInput()}

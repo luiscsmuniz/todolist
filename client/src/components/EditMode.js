@@ -37,6 +37,7 @@ export default class EditMode extends Component {
             this.setState({
               editMode: false,
             })
+            this.props.onUpdate()
           }
         },
       )
@@ -44,7 +45,7 @@ export default class EditMode extends Component {
 
   renderTask = () => {
     if (this.state.editMode) {
-      return <Input type="text" id={this.props.id} onKeyDown={this.handleKeyDownTask} defaultValue={this.props.description} />
+      return <Input type="text" id={this.props.id} autoFocus="true" onKeyDown={this.handleKeyDownTask} defaultValue={this.props.description} />
     }
     return (
       <div onDoubleClick={this.handleEditMode} id={String(this.props.id)}>
