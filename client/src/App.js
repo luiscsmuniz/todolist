@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
-import { Button, Container, Row, Col, Input, ListGroup, ListGroupItem } from 'reactstrap'
-import Switch from 'react-switch'
+import { Container, Row, Col, ListGroup, ListGroupItem, Button, ButtonGroup } from 'reactstrap'
 import TaskTitle from './components/TaskTitle'
 import EditMode from './components/EditMode'
+import CreateMode from './components/CreateMode'
+import DeleteMode from './components/DeleteMode'
+import UpdateStatusMode from './components/UpdateStatusMode'
 import './App.css'
 
 const API = 'http://localhost:3001/api/v1/tasks/'
@@ -12,7 +14,7 @@ class App extends Component {
     super(propos)
     this.state = {
       tasks: [],
-      description: '',
+      filter: 'all',
     }
   }
 
@@ -20,53 +22,8 @@ class App extends Component {
     this.getTask()
   }
 
-  handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      if (this.state.description) {
-        this.createTask()
-        this.resetFieldTask()
-      }
-    }
-  }
-
-  handleChange = (event) => {
-    this.setState(
-      {
-        description: event.target.value,
-      },
-    )
-  }
-
-  handleChecked = (checked, event, id) => {
-    if (checked) {
-      this.updateStatus(id, 1)
-    } else {
-      this.updateStatus(id, 0)
-    }
-  }
-
-  handleDelete = (event) => {
-    const confirm = window.confirm('Deseja excluir a tarefa?')
-    if (confirm) {
-      this.deleteTask(event.target.value)
-    }
-  }
-
-  createTask = () => {
-    const { description } = this.state
-    fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ description, status: 0 }),
-    }).then(response => response.json())
-      .then(
-        data => this.setState(prevState => ({
-          tasks: [
-            data,
-            ...prevState.tasks,
-          ],
-        })),
-      )
+  onRadioBtnClick(filter) {
+    this.setState({ filter })
   }
 
   getTask = (idTask = '') => {
@@ -77,73 +34,50 @@ class App extends Component {
       }))
   }
 
-  deleteTask = (idTask) => {
-    fetch(API + idTask, {
-      method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-    })
-      .then(
-        data => {
-          if (data.status === 204) {
-            this.getTask()
-          }
-        },
-      )
-  }
-
-  updateStatus = (idTask, status) => {
-    fetch(API + idTask, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ status }),
-    })
-      .then(
-        data => {
-          if (data.status === 200) {
-            this.getTask()
-          }
-        },
-      )
-  }
-
-  resetFieldTask() {
-    this.setState({
-      description: '',
-    })
-  }
-
-  renderInput = () => (
-    <Col md={{ size: 6, offset: 3 }}>
-      <Input type="text" value={this.state.description} onKeyPress={this.handleKeyPress} onChange={this.handleChange} placeholder="Digite a tarefa e pressione enter" />
-    </Col>
-  )
-
-  renderButton = (id) => (
-    <Button color="danger" value={id} onClick={this.handleDelete} className="float-right">Excluir</Button>
-  )
-
-  renderSwitch = (status, id) => (
-    <Switch
-      onChange={this.handleChecked}
-      checked={status === 'completed'}
-      id={String(id)}
-    />
-  )
-
-  renderTask = (description, id) => (
-    <EditMode description={description} id={id} api={API} onUpdate={this.getTask} />
-  )
-
   renderList = () => (
-    <ListGroup>
+    <ListGroup className="spacing-10">
       { this.state.tasks.map((task) => (
         <ListGroupItem key={task.id}>
-          {this.renderTask(task.description, task.id)}
-          {this.renderSwitch(task.status, task.id)}
-          {this.renderButton(task.id)}
+          <EditMode description={task.description} id={task.id} api={API} onUpdate={this.getTask} />
+          <UpdateStatusMode id={task.id} onUpdate={this.getTask} status={task.status} api={API} />
+          <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
         </ListGroupItem>
       ))}
     </ListGroup>
+  )
+
+  list = () => (
+    this.state.tasks.map((task) => {
+      if (task.status === this.state.filter) {
+        return (
+          <ListGroupItem key={task.id}>
+            <EditMode
+              description={task.description}
+              id={task.id}
+              api={API}
+              onUpdate={this.getTask}
+            />
+            <UpdateStatusMode id={task.id} onUpdate={this.getTask} status={task.status} api={API} />
+            <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
+          </ListGroupItem>
+        )
+      }
+      if (this.state.filter === 'all') {
+        return (
+          <ListGroupItem key={task.id}>
+            <EditMode
+              description={task.description}
+              id={task.id}
+              api={API}
+              onUpdate={this.getTask}
+            />
+            <UpdateStatusMode id={task.id} onUpdate={this.getTask} status={task.status} api={API} />
+            <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
+          </ListGroupItem>
+        )
+      }
+      return false
+    })
   )
 
   render() {
@@ -153,11 +87,20 @@ class App extends Component {
           <TaskTitle title="Todolist" size="10" offset="1" class="text-center" color="white" />
         </Row>
         <Row>
-          {this.renderInput()}
+          <CreateMode placeholder="Digite sua tarefa..." onCreate={this.getTask} api={API} />
         </Row>
         <Row>
           <Col md={{ size: 6, offset: 3 }} className="spacing-10">
-            {this.renderList()}
+            <div className="text-center">
+              <ButtonGroup className="align-center">
+                <Button color="info" onClick={() => this.onRadioBtnClick('all')} active={this.state.filter === 1}>Todos</Button>
+                <Button color="info" onClick={() => this.onRadioBtnClick('in_progress')} active={this.state.filter === 2}>Em progresso</Button>
+                <Button color="info" onClick={() => this.onRadioBtnClick('completed')} active={this.state.filter === 3}>Finalizado</Button>
+              </ButtonGroup>
+            </div>
+            <ListGroup className="spacing-10">
+              {this.list()}
+            </ListGroup>
           </Col>
         </Row>
       </Container>

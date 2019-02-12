@@ -5,8 +5,16 @@ export default class TaskTitle extends Component {
   render() {
     return (
       <Col md={{ size: this.props.size, offset: this.props.offset }}>
-        <h1 className={this.props.class} style={{ color: 'white' }}>{this.props.title}</h1>
+        <h1 className={this.props.class} style={{ color: this.props.color }}>{this.props.title}</h1>
       </Col>
     )
   }
+}
+
+TaskTitle.defaultProps = {
+  class: '',
+  size: '',
+  offset: '',
+  title: 'Todolist',
+  color: 'white',
 }

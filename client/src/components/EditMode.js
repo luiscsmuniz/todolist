@@ -45,7 +45,7 @@ export default class EditMode extends Component {
 
   renderTask = () => {
     if (this.state.editMode) {
-      return <Input type="text" id={this.props.id} autoFocus="true" onKeyDown={this.handleKeyDownTask} defaultValue={this.props.description} />
+      return <Input type="text" id={this.props.id} autoFocus onKeyDown={this.handleKeyDownTask} defaultValue={this.props.description} />
     }
     return (
       <div onDoubleClick={this.handleEditMode} id={String(this.props.id)}>
@@ -57,4 +57,10 @@ export default class EditMode extends Component {
   render() {
     return this.renderTask()
   }
+}
+
+EditMode.defaultProps = {
+  id: '',
+  description: '',
+  onUpdate: '',
 }
