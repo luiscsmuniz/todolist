@@ -47,37 +47,23 @@ class App extends Component {
   )
 
   list = () => (
-    this.state.tasks.map((task) => {
-      if (task.status === this.state.filter) {
-        return (
-          <ListGroupItem key={task.id}>
-            <EditMode
-              description={task.description}
-              id={task.id}
-              api={API}
-              onUpdate={this.getTask}
-            />
-            <UpdateStatusMode id={task.id} onUpdate={this.getTask} status={task.status} api={API} />
-            <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
-          </ListGroupItem>
-        )
-      }
+    this.state.tasks.filter((task) => {
       if (this.state.filter === 'all') {
-        return (
-          <ListGroupItem key={task.id}>
-            <EditMode
-              description={task.description}
-              id={task.id}
-              api={API}
-              onUpdate={this.getTask}
-            />
-            <UpdateStatusMode id={task.id} onUpdate={this.getTask} status={task.status} api={API} />
-            <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
-          </ListGroupItem>
-        )
+        return task
       }
-      return false
-    })
+      return this.state.filter === task.status
+    }).map((task) => (
+      <ListGroupItem key={task.id}>
+        <EditMode
+          description={task.description}
+          id={task.id}
+          api={API}
+          onUpdate={this.getTask}
+        />
+        <UpdateStatusMode id={task.id} onUpdate={this.getTask} status={task.status} api={API} />
+        <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
+      </ListGroupItem>
+    ))
   )
 
   render() {
