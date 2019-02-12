@@ -34,18 +34,6 @@ class App extends Component {
       }))
   }
 
-  renderList = () => (
-    <ListGroup className="spacing-10">
-      { this.state.tasks.map((task) => (
-        <ListGroupItem key={task.id}>
-          <EditMode description={task.description} id={task.id} api={API} onUpdate={this.getTask} />
-          <UpdateStatusMode id={task.id} onUpdate={this.getTask} status={task.status} api={API} />
-          <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
-        </ListGroupItem>
-      ))}
-    </ListGroup>
-  )
-
   list = () => (
     this.state.tasks.filter((task) => {
       if (this.state.filter === 'all') {
