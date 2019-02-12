@@ -67,9 +67,9 @@ class App extends Component {
           <Col md={{ size: 6, offset: 3 }} className="spacing-10">
             <div className="text-center">
               <ButtonGroup className="align-center">
-                <Button color="info" onClick={() => this.onRadioBtnClick('all')} active={this.state.filter === 1}>Todos</Button>
-                <Button color="info" onClick={() => this.onRadioBtnClick('in_progress')} active={this.state.filter === 2}>Em progresso</Button>
-                <Button color="info" onClick={() => this.onRadioBtnClick('completed')} active={this.state.filter === 3}>Finalizado</Button>
+                <Button color="info" onClick={() => this.onRadioBtnClick('all')} active={this.state.filter === 'all'}>Todos</Button>
+                <Button color="info" onClick={() => this.onRadioBtnClick('in_progress')} active={this.state.filter === 'in_progress'}>Em progresso</Button>
+                <Button color="info" onClick={() => this.onRadioBtnClick('completed')} active={this.state.filter === 'completed'}>Finalizado</Button>
               </ButtonGroup>
             </div>
             <ListGroup className="spacing-10">
