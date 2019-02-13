@@ -10,6 +10,7 @@ module.exports = {
     "react/style-prop-object": "off",
     "react/no-multi-comp": "off",
     "react/prefer-stateless-function": "off",
+    "react/destructuring-assignment": "off",
     "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 1 }],
     "no-restricted-syntax": "off",
     "no-plusplus": "off",
