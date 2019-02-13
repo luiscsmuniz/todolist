@@ -3,13 +3,20 @@ import Switch from 'react-switch'
 
 const status = {
   completed: 1,
-  in_progress: 0,
+  inProgress: 0,
 }
 export default class UpdateStatusMode extends Component {
-  handleChecked = (checked, event, id) => {
+  static defaultProps = {
+    api: '',
+    status: '',
+    id: '',
+    onUpdate: () => {},
+  }
+
+  handleChecked = (checked) => {
     const params = {
-      id,
-      status: checked === true ? status.completed : status.in_progress,
+      id: this.props.id,
+      status: checked === true ? status.completed : status.inProgress,
     }
     this.updateStatus(params)
   }
@@ -21,9 +28,8 @@ export default class UpdateStatusMode extends Component {
       body: JSON.stringify({ status: params.status }),
     })
     const json = await response.json()
-    if (json) {
-      this.props.onUpdate()
-    }
+    this.props.onUpdate()
+    return json
   }
 
   render() {
@@ -31,15 +37,8 @@ export default class UpdateStatusMode extends Component {
       <Switch
         onChange={this.handleChecked}
         checked={this.props.status === 'completed'}
-        id={String(this.props.id)}
       />
     )
   }
 }
 
-UpdateStatusMode.defaultProps = {
-  api: '',
-  status: '',
-  id: '',
-  onUpdate: '',
-}

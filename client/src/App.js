@@ -31,12 +31,14 @@ class App extends Component {
       }))
   }
 
-  getFilteredTasks = (task) => {
-    if (this.state.filter === 'all') {
-      return task
-    }
-    return this.state.filter === task.status
-  }
+  getFilteredTasks = () => (
+    this.state.tasks.filter((task) => {
+      if (this.state.filter === 'all') {
+        return task
+      }
+      return this.state.filter === task.status
+    })
+  )
 
   render() {
     return (
@@ -58,23 +60,23 @@ class App extends Component {
             </div>
             <ListGroup className="spacing-10">
               {
-                this.state.tasks.filter((task) => this.getFilteredTasks(task)).map((task) => (
-                  <ListGroupItem key={task.id}>
-                    <EditMode
-                      description={task.description}
-                      id={task.id}
-                      api={API}
-                      onUpdate={this.getTask}
-                    />
-                    <UpdateStatusMode
-                      id={task.id}
-                      onUpdate={this.getTask}
-                      status={task.status}
-                      api={API}
-                    />
-                    <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
-                  </ListGroupItem>
-                ))
+               this.getFilteredTasks().map((task) => (
+                 <ListGroupItem key={task.id}>
+                   <EditMode
+                     description={task.description}
+                     id={task.id}
+                     api={API}
+                     onUpdate={this.getTask}
+                   />
+                   <UpdateStatusMode
+                     id={task.id}
+                     onUpdate={this.getTask}
+                     status={task.status}
+                     api={API}
+                   />
+                   <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
+                 </ListGroupItem>
+               ))
               }
             </ListGroup>
           </Col>

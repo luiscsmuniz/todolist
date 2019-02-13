@@ -6,6 +6,12 @@ export default class CreateMode extends Component {
     description: '',
   }
 
+  static defaultProps = {
+    placeholder: 'Digite a tarefa',
+    onCreate: () => {},
+    api: '',
+  }
+
   handleKeyPress = (event) => {
     if (event.key === 'Enter' && this.state.description) {
       this.createTask()
@@ -26,12 +32,11 @@ export default class CreateMode extends Component {
     const response = await fetch(this.props.api, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ description, status: 0 }),
+      body: JSON.stringify({ description }),
     })
     const json = await response.json()
-    if (json) {
-      this.props.onCreate()
-    }
+    this.props.onCreate()
+    return json
   }
 
   resetFieldTask() {
@@ -47,10 +52,4 @@ export default class CreateMode extends Component {
       </Col>
     )
   }
-}
-
-CreateMode.defaultProps = {
-  placeholder: 'Digite a tarefa',
-  onCreate: '',
-  api: '',
 }

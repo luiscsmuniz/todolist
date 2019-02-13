@@ -6,6 +6,12 @@ export default class EditMode extends Component {
     editMode: false,
   }
 
+  static defaultProps = {
+    id: '',
+    description: '',
+    onUpdate: () => {},
+  }
+
   handleEditMode = () => {
     this.setState({
       editMode: true,
@@ -33,12 +39,11 @@ export default class EditMode extends Component {
       body: JSON.stringify({ description: params.description }),
     })
     const json = await response.json()
-    if (json) {
-      this.props.onUpdate()
-      this.setState({
-        editMode: false,
-      })
-    }
+    this.props.onUpdate()
+    this.setState({
+      editMode: false,
+    })
+    return json
   }
 
   renderTask = () => {
@@ -57,8 +62,3 @@ export default class EditMode extends Component {
   }
 }
 
-EditMode.defaultProps = {
-  id: '',
-  description: '',
-  onUpdate: '',
-}
