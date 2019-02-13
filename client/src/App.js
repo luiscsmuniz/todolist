@@ -10,55 +10,39 @@ import './App.css'
 const API = 'http://localhost:3001/api/v1/tasks/'
 
 class App extends Component {
-  constructor(propos) {
-    super(propos)
-    this.state = {
-      tasks: [],
-      filter: 'all',
-    }
+  state = {
+    tasks: [],
+    filter: 'all',
   }
 
   componentDidMount() {
     this.getTask()
   }
 
-  onRadioBtnClick(filter) {
+  onRadioClick(filter) {
     this.setState({ filter })
   }
 
-  getTask = (idTask = '') => {
-    fetch(API + idTask)
+  getTask = (id = '') => {
+    fetch(API + id)
       .then(response => response.json())
-      .then(data => this.setState({
-        tasks: data,
+      .then(task => this.setState({
+        tasks: task,
       }))
   }
 
-  list = () => (
-    this.state.tasks.filter((task) => {
-      if (this.state.filter === 'all') {
-        return task
-      }
-      return this.state.filter === task.status
-    }).map((task) => (
-      <ListGroupItem key={task.id}>
-        <EditMode
-          description={task.description}
-          id={task.id}
-          api={API}
-          onUpdate={this.getTask}
-        />
-        <UpdateStatusMode id={task.id} onUpdate={this.getTask} status={task.status} api={API} />
-        <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
-      </ListGroupItem>
-    ))
-  )
+  getFilteredTasks = (task) => {
+    if (this.state.filter === 'all') {
+      return task
+    }
+    return this.state.filter === task.status
+  }
 
   render() {
     return (
       <Container className="body-bg">
         <Row>
-          <TaskTitle title="Todolist" size="10" offset="1" class="text-center" color="white" />
+          <TaskTitle title="Todolist" size="10" offset="1" className="text-center" color="white" />
         </Row>
         <Row>
           <CreateMode placeholder="Digite sua tarefa..." onCreate={this.getTask} api={API} />
@@ -67,13 +51,31 @@ class App extends Component {
           <Col md={{ size: 6, offset: 3 }} className="spacing-10">
             <div className="text-center">
               <ButtonGroup className="align-center">
-                <Button color="info" onClick={() => this.onRadioBtnClick('all')} active={this.state.filter === 'all'}>Todos</Button>
-                <Button color="info" onClick={() => this.onRadioBtnClick('in_progress')} active={this.state.filter === 'in_progress'}>Em progresso</Button>
-                <Button color="info" onClick={() => this.onRadioBtnClick('completed')} active={this.state.filter === 'completed'}>Finalizado</Button>
+                <Button color="info" onClick={() => this.onRadioClick('all')} active={this.state.filter === 'all'}>Todos</Button>
+                <Button color="info" onClick={() => this.onRadioClick('in_progress')} active={this.state.filter === 'in_progress'}>Em progresso</Button>
+                <Button color="info" onClick={() => this.onRadioClick('completed')} active={this.state.filter === 'completed'}>Finalizado</Button>
               </ButtonGroup>
             </div>
             <ListGroup className="spacing-10">
-              {this.list()}
+              {
+                this.state.tasks.filter((task) => this.getFilteredTasks(task)).map((task) => (
+                  <ListGroupItem key={task.id}>
+                    <EditMode
+                      description={task.description}
+                      id={task.id}
+                      api={API}
+                      onUpdate={this.getTask}
+                    />
+                    <UpdateStatusMode
+                      id={task.id}
+                      onUpdate={this.getTask}
+                      status={task.status}
+                      api={API}
+                    />
+                    <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
+                  </ListGroupItem>
+                ))
+              }
             </ListGroup>
           </Col>
         </Row>

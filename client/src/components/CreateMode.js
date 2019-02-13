@@ -2,19 +2,14 @@ import React, { Component } from 'react'
 import { Input, Col } from 'reactstrap'
 
 export default class CreateMode extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      description: '',
-    }
+  state = {
+    description: '',
   }
 
   handleKeyPress = (event) => {
-    if (event.key === 'Enter') {
-      if (this.state.description) {
-        this.createTask()
-        this.resetFieldTask()
-      }
+    if (event.key === 'Enter' && this.state.description) {
+      this.createTask()
+      this.resetFieldTask()
     }
   }
 
@@ -26,20 +21,17 @@ export default class CreateMode extends Component {
     )
   }
 
-  createTask = () => {
+  createTask = async () => {
     const { description } = this.state
-    fetch(this.props.api, {
+    const response = await fetch(this.props.api, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({ description, status: 0 }),
-    }).then(response => response.json())
-      .then(
-        data => {
-          if (data) {
-            this.props.onCreate()
-          }
-        },
-      )
+    })
+    const json = await response.json()
+    if (json) {
+      this.props.onCreate()
+    }
   }
 
   resetFieldTask() {

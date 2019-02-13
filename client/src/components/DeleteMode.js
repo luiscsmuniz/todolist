@@ -9,18 +9,15 @@ export default class DeleteMode extends Component {
     }
   }
 
-  deleteTask = (idTask) => {
-    fetch(this.props.api + idTask, {
+  deleteTask = async (task) => {
+    const response = fetch(this.props.api + task, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     })
-      .then(
-        data => {
-          if (data.status === 204) {
-            this.props.onDelete()
-          }
-        },
-      )
+    const data = await response
+    if (data.status === 204) {
+      this.props.onDelete()
+    }
   }
 
   render() {

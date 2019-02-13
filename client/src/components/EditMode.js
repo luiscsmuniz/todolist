@@ -2,11 +2,8 @@ import React, { Component } from 'react'
 import { Input } from 'reactstrap'
 
 export default class EditMode extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      editMode: false,
-    }
+  state = {
+    editMode: false,
   }
 
   handleEditMode = () => {
@@ -17,7 +14,11 @@ export default class EditMode extends Component {
 
   handleKeyDownTask = (event) => {
     if (event.key === 'Enter') {
-      this.updateTask(event.target.id, event.target.value)
+      const params = {
+        id: event.target.id,
+        description: event.target.value,
+      }
+      this.updateTask(params)
     } else if (event.key === 'Escape') {
       this.setState({
         editMode: false,
@@ -25,22 +26,19 @@ export default class EditMode extends Component {
     }
   }
 
-  updateTask = (idTask, description) => {
-    fetch(this.props.api + idTask, {
+  updateTask = async (params) => {
+    const response = await fetch(this.props.api + params.id, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ description }),
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ description: params.description }),
     })
-      .then(
-        data => {
-          if (data.status === 200) {
-            this.setState({
-              editMode: false,
-            })
-            this.props.onUpdate()
-          }
-        },
-      )
+    const json = await response.json()
+    if (json) {
+      this.props.onUpdate()
+      this.setState({
+        editMode: false,
+      })
+    }
   }
 
   renderTask = () => {
