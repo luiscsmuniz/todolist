@@ -7,7 +7,7 @@ import DeleteMode from './components/DeleteMode'
 import UpdateStatusMode from './components/UpdateStatusMode'
 import './App.css'
 
-const API = 'http://localhost:3001/api/v1/task'
+const API = 'http://localhost:3001/graphql/'
 
 class App extends Component {
   state = {
@@ -23,12 +23,17 @@ class App extends Component {
     this.setState({ filter })
   }
 
-  getTask = (id = '') => {
-    fetch(API + id)
-      .then(response => response.json())
-      .then(task => this.setState({
-        tasks: task,
-      }))
+  getTask = async () => {
+    const query = '{task{id description status}}'
+    const response = await fetch(API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ query }),
+    })
+    const task = await response.json()
+    this.setState({
+      tasks: task.data.task,
+    })
   }
 
   getFilteredTasks = () => (

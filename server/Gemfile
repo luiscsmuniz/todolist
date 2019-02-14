@@ -40,11 +40,7 @@ gem 'mysql2', '~> 0.5.2'
 
 gem 'rack-cors', '~> 1.0.2'
 
-<<<<<<< HEAD
 gem 'graphql', '~> 1.9.1'
-=======
-gem 'graphql', '~> 1.8.14'
->>>>>>> remotes/origin/feature/server-side-to-graphql
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
