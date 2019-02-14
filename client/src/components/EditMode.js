@@ -21,7 +21,7 @@ export default class EditMode extends Component {
   handleKeyDownTask = (event) => {
     if (event.key === 'Enter') {
       const params = {
-        id: event.target.id,
+        id: this.props.id,
         description: event.target.value,
       }
       this.updateTask(params)
@@ -48,7 +48,7 @@ export default class EditMode extends Component {
 
   renderTask = () => {
     if (this.state.editMode) {
-      return <Input type="text" id={this.props.id} autoFocus onKeyDown={this.handleKeyDownTask} defaultValue={this.props.description} />
+      return <Input type="text" autoFocus onKeyDown={this.handleKeyDownTask} defaultValue={this.props.description} />
     }
     return (
       <div onDoubleClick={this.handleEditMode} id={String(this.props.id)}>

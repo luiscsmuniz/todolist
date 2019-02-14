@@ -47,7 +47,7 @@ export default class CreateMode extends Component {
 
   render() {
     return (
-      <Col md={{ size: 6, offset: 3 }}>
+      <Col md={{ size: 10, offset: 1 }}>
         <Input type="text" value={this.state.description} onKeyPress={this.handleKeyPress} onChange={this.handleChange} placeholder={this.props.placeholder} />
       </Col>
     )

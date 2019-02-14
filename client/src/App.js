@@ -50,7 +50,7 @@ class App extends Component {
           <CreateMode placeholder="Digite sua tarefa..." onCreate={this.getTask} api={API} />
         </Row>
         <Row>
-          <Col md={{ size: 6, offset: 3 }} className="spacing-10">
+          <Col md={{ size: 10, offset: 1 }} className="spacing-10">
             <div className="text-center">
               <ButtonGroup className="align-center">
                 <Button color="info" onClick={() => this.onRadioClick('all')} active={this.state.filter === 'all'}>Todos</Button>

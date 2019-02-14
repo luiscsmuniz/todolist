@@ -10,15 +10,14 @@ export default class DeleteMode extends Component {
     onDelete: () => {},
   }
 
-  handleDelete = (event) => {
-    const id = event.target.value
+  handleDelete = () => {
     confirmAlert({
       title: 'Excluir tarefa',
       message: 'Deseja excluir a tarefa?',
       buttons: [
         {
           label: 'Sim',
-          onClick: () => this.deleteTask(id),
+          onClick: () => this.deleteTask(),
         },
         {
           label: 'Não',
@@ -28,8 +27,8 @@ export default class DeleteMode extends Component {
     })
   }
 
-  deleteTask = async (task) => {
-    const response = fetch(this.props.api + task, {
+  deleteTask = async () => {
+    const response = fetch(this.props.api + this.props.id, {
       method: 'DELETE',
       headers: { 'Content-Type': 'application/json' },
     })
