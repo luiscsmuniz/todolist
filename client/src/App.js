@@ -7,7 +7,7 @@ import DeleteMode from './components/DeleteMode'
 import UpdateStatusMode from './components/UpdateStatusMode'
 import './App.css'
 
-const API = 'http://localhost:3001/api/v1/tasks/'
+const API = 'http://localhost:3001/graphql/task'
 
 class App extends Component {
   state = {
