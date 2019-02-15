@@ -1,11 +1,13 @@
 import React, { Component } from 'react'
 import Switch from 'react-switch'
 
+import withTaskService from '../hoc/withTaskService'
+
 const status = {
   completed: 'COMPLETED',
   inProgress: 'IN_PROGRESS',
 }
-export default class UpdateStatusMode extends Component {
+class UpdateStatusMode extends Component {
   static defaultProps = {
     api: '',
     status: '',
@@ -14,36 +16,18 @@ export default class UpdateStatusMode extends Component {
   }
 
   handleChecked = (checked) => {
-    const params = {
+    this.updateStatus({
       id: this.props.id,
-      status: checked === true ? status.completed : status.inProgress,
-    }
-    this.updateStatus(params)
+      status: checked ? status.completed : status.inProgress,
+    })
   }
 
-  updateStatus = async (params) => {
-    const query = JSON.stringify({
-      query: `mutation {
-        updateTask(
-          input: {
-            id: ${params.id}
-            status: ${params.status}
-          }
-        ){
-          id
-          description
-          status
-        }
-      }`,
-    })
-    const response = await fetch(this.props.api, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: query,
-    })
-    const json = await response.json()
+  updateStatus = async (input) => {
+    const task = await this.props.taskService.update({ input })
+
     this.props.onUpdate()
-    return json
+
+    return task
   }
 
   render() {
@@ -56,3 +40,4 @@ export default class UpdateStatusMode extends Component {
   }
 }
 
+export default withTaskService(UpdateStatusMode)
