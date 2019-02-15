@@ -25,8 +25,10 @@ export default class UpdateStatusMode extends Component {
     const query = JSON.stringify({
       query: `mutation {
         updateTask(
-          id: ${params.id}
-          status: ${params.status}
+          input: {
+            id: ${params.id}
+            status: ${params.status}
+          }
         ){
           id
           description

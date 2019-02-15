@@ -2,15 +2,19 @@
 
 module Mutations
   class UpdateTask < BaseMutation
-    argument :id, ID, required: true
-    argument :description, String, required: false
-    argument :status, Types::TaskStatus, required: false
+    class UpdateTaskInput < Types::BaseInputObject
+      argument :id, ID, required: true
+      argument :description, String, required: false
+      argument :status, Types::TaskStatus, required: false
+    end
+
+    argument :input, UpdateTaskInput, required: true
+
     type Types::TaskType
-    def resolve(id:, description: nil, status: nil)
-      task = Task.find(id)
-      status ? task.status = status.downcase : false
-      description ? task.description = description : false
-      task.save!
+
+    def resolve(input:)
+      task = Task.find(input[:id])
+      task.update!(input.to_h)
       task
     end
   end

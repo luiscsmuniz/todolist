@@ -36,8 +36,10 @@ export default class EditMode extends Component {
     const query = JSON.stringify({
       query: `mutation {
         updateTask(
-          id: ${params.id}
-          description: "${params.description}"
+          input: {
+            id: ${params.id}
+            description: "${params.description}"
+          }
         ){
           id
           description
