@@ -9,7 +9,6 @@ const status = {
 }
 class UpdateStatusMode extends Component {
   static defaultProps = {
-    api: '',
     status: '',
     id: '',
     onUpdate: () => {},

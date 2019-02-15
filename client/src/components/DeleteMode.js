@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { Button } from 'reactstrap'
 import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
+import withTaskService from '../hoc/withTaskService'
 
-export default class DeleteMode extends Component {
+class DeleteMode extends Component {
   static defaultProps = {
-    api: '',
     id: '',
     onDelete: () => {},
   }
@@ -17,7 +17,7 @@ export default class DeleteMode extends Component {
       buttons: [
         {
           label: 'Sim',
-          onClick: () => this.deleteTask(),
+          onClick: () => this.deleteTask({ id: this.props.id }),
         },
         {
           label: 'Não',
@@ -27,26 +27,10 @@ export default class DeleteMode extends Component {
     })
   }
 
-  deleteTask = async () => {
-    const query = JSON.stringify({
-      query: `mutation {
-        deleteTask(
-          id: "${this.props.id}"
-        ){
-          id
-          description
-          status
-        }
-      }`,
-    })
-    const response = fetch(this.props.api, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: query,
-    })
-    const data = await response
+  deleteTask = async (input) => {
+    const task = await this.props.taskService.delete(input)
     this.props.onDelete()
-    return data
+    return task
   }
 
   render() {
@@ -55,4 +39,6 @@ export default class DeleteMode extends Component {
     )
   }
 }
+
+export default withTaskService(DeleteMode)
 

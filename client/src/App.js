@@ -6,8 +6,7 @@ import CreateMode from './components/CreateMode'
 import DeleteMode from './components/DeleteMode'
 import UpdateStatusMode from './components/UpdateStatusMode'
 import './App.css'
-
-const API = 'http://localhost:3001/graphql/'
+import withTaskService from './hoc/withTaskService'
 
 class App extends Component {
   state = {
@@ -24,13 +23,7 @@ class App extends Component {
   }
 
   getTask = async () => {
-    const query = '{tasks{id description status}}'
-    const response = await fetch(API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ query }),
-    })
-    const task = await response.json()
+    const task = await this.props.taskService.all()
     this.setState({
       tasks: task.data.tasks,
     })
@@ -52,7 +45,7 @@ class App extends Component {
           <TaskTitle title="Todolist" size="10" offset="1" className="text-center" color="white" />
         </Row>
         <Row>
-          <CreateMode placeholder="Digite sua tarefa..." onCreate={this.getTask} api={API} />
+          <CreateMode placeholder="Digite sua tarefa..." onCreate={this.getTask} />
         </Row>
         <Row>
           <Col md={{ size: 10, offset: 1 }} className="spacing-10">
@@ -70,16 +63,14 @@ class App extends Component {
                    <EditMode
                      description={task.description}
                      id={task.id}
-                     api={API}
                      onUpdate={this.getTask}
                    />
                    <UpdateStatusMode
                      id={task.id}
                      onUpdate={this.getTask}
                      status={task.status}
-                     api={API}
                    />
-                   <DeleteMode api={API} onDelete={this.getTask} id={task.id} />
+                   <DeleteMode onDelete={this.getTask} id={task.id} />
                  </ListGroupItem>
                ))
               }
@@ -91,4 +82,4 @@ class App extends Component {
   }
 }
 
-export default App
+export default withTaskService(App)

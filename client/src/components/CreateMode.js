@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 import { Input, Col } from 'reactstrap'
+import withTaskService from '../hoc/withTaskService'
 
-export default class CreateMode extends Component {
+class CreateMode extends Component {
   state = {
     description: '',
   }
@@ -9,12 +10,11 @@ export default class CreateMode extends Component {
   static defaultProps = {
     placeholder: 'Digite a tarefa',
     onCreate: () => {},
-    api: '',
   }
 
   handleKeyPress = (event) => {
     if (event.key === 'Enter' && this.state.description) {
-      this.createTask()
+      this.createTask({ description: this.state.description })
       this.resetFieldTask()
     }
   }
@@ -27,27 +27,10 @@ export default class CreateMode extends Component {
     )
   }
 
-  createTask = async () => {
-    const { description } = this.state
-    const query = JSON.stringify({
-      query: `mutation {
-        createTask(
-          description: "${description}"
-        ){
-          id
-          description
-          status
-        }
-      }`,
-    })
-    const response = await fetch(this.props.api, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: query,
-    })
-    const json = await response.json()
+  createTask = async (input) => {
+    const task = await this.props.taskService.create({ input })
     this.props.onCreate()
-    return json
+    return task
   }
 
   resetFieldTask() {
@@ -64,3 +47,5 @@ export default class CreateMode extends Component {
     )
   }
 }
+
+export default withTaskService(CreateMode)
