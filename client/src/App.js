@@ -12,7 +12,7 @@ const API = 'http://localhost:3001/graphql/'
 class App extends Component {
   state = {
     tasks: [],
-    filter: 'all',
+    filter: 'ALL',
   }
 
   componentDidMount() {
@@ -38,7 +38,7 @@ class App extends Component {
 
   getFilteredTasks = () => (
     this.state.tasks.filter((task) => {
-      if (this.state.filter === 'all') {
+      if (this.state.filter === 'ALL') {
         return task
       }
       return this.state.filter === task.status
@@ -58,9 +58,9 @@ class App extends Component {
           <Col md={{ size: 10, offset: 1 }} className="spacing-10">
             <div className="text-center">
               <ButtonGroup className="align-center">
-                <Button color="info" onClick={() => this.onRadioClick('all')} active={this.state.filter === 'all'}>Todos</Button>
-                <Button color="info" onClick={() => this.onRadioClick('in_progress')} active={this.state.filter === 'in_progress'}>Em progresso</Button>
-                <Button color="info" onClick={() => this.onRadioClick('completed')} active={this.state.filter === 'completed'}>Finalizado</Button>
+                <Button color="info" onClick={() => this.onRadioClick('ALL')} active={this.state.filter === 'ALL'}>Todos</Button>
+                <Button color="info" onClick={() => this.onRadioClick('IN_PROGRESS')} active={this.state.filter === 'IN_PROGRESS'}>Em progresso</Button>
+                <Button color="info" onClick={() => this.onRadioClick('COMPLETED')} active={this.state.filter === 'COMPLETED'}>Finalizado</Button>
               </ButtonGroup>
             </div>
             <ListGroup className="spacing-10">

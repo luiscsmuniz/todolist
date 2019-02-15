@@ -4,6 +4,10 @@ module Types
   class TaskType < Types::BaseObject
     field :id, ID, null: true
     field :description, String, null: true
-    field :status, String, null: true
+    field :status, Types::TaskStatus, null: true
+
+    def status
+      object.status&.upcase
+    end
   end
 end

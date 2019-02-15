@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import Switch from 'react-switch'
 
 const status = {
-  completed: 'completed',
-  inProgress: 'in_progress',
+  completed: 'COMPLETED',
+  inProgress: 'IN_PROGRESS',
 }
 export default class UpdateStatusMode extends Component {
   static defaultProps = {
@@ -26,7 +26,7 @@ export default class UpdateStatusMode extends Component {
       query: `mutation {
         updateTask(
           id: ${params.id}
-          status: "${params.status}"
+          status: ${params.status}
         ){
           id
           description
@@ -48,7 +48,7 @@ export default class UpdateStatusMode extends Component {
     return (
       <Switch
         onChange={this.handleChecked}
-        checked={this.props.status === 'completed'}
+        checked={this.props.status === status.completed}
       />
     )
   }
