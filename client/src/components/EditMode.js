@@ -33,10 +33,22 @@ export default class EditMode extends Component {
   }
 
   updateTask = async (params) => {
-    const response = await fetch(this.props.api + params.id, {
-      method: 'PUT',
+    const query = JSON.stringify({
+      query: `mutation {
+        updateTask(
+          id: ${params.id}
+          description: "${params.description}"
+        ){
+          id
+          description
+          status
+        }
+      }`,
+    })
+    const response = await fetch(this.props.api, {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ description: params.description }),
+      body: query,
     })
     const json = await response.json()
     this.props.onUpdate()

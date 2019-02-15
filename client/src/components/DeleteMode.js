@@ -28,14 +28,25 @@ export default class DeleteMode extends Component {
   }
 
   deleteTask = async () => {
-    const response = fetch(this.props.api + this.props.id, {
-      method: 'DELETE',
+    const query = JSON.stringify({
+      query: `mutation {
+        deleteTask(
+          id: "${this.props.id}"
+        ){
+          id
+          description
+          status
+        }
+      }`,
+    })
+    const response = fetch(this.props.api, {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
+      body: query,
     })
     const data = await response
-    if (data.status === 204) {
-      this.props.onDelete()
-    }
+    this.props.onDelete()
+    return data
   }
 
   render() {

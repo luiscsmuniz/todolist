@@ -29,10 +29,21 @@ export default class CreateMode extends Component {
 
   createTask = async () => {
     const { description } = this.state
+    const query = JSON.stringify({
+      query: `mutation {
+        createTask(
+          description: "${description}"
+        ){
+          id
+          description
+          status
+        }
+      }`,
+    })
     const response = await fetch(this.props.api, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ description }),
+      headers: { 'Content-Type': 'application/json' },
+      body: query,
     })
     const json = await response.json()
     this.props.onCreate()

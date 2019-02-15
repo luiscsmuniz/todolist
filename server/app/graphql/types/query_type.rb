@@ -5,7 +5,7 @@ module Types
     field :task, [TaskType], null: false
 
     def task
-      Task.all
+      Task.order(created_at: :desc)
     end
   end
 end

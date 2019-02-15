@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import Switch from 'react-switch'
 
 const status = {
-  completed: 1,
-  inProgress: 0,
+  completed: 'completed',
+  inProgress: 'in_progress',
 }
 export default class UpdateStatusMode extends Component {
   static defaultProps = {
@@ -22,10 +22,22 @@ export default class UpdateStatusMode extends Component {
   }
 
   updateStatus = async (params) => {
-    const response = await fetch(this.props.api + params.id, {
-      method: 'PUT',
+    const query = JSON.stringify({
+      query: `mutation {
+        updateTask(
+          id: ${params.id}
+          status: "${params.status}"
+        ){
+          id
+          description
+          status
+        }
+      }`,
+    })
+    const response = await fetch(this.props.api, {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ status: params.status }),
+      body: query,
     })
     const json = await response.json()
     this.props.onUpdate()
