@@ -2,9 +2,9 @@
 
 module Types
   class QueryType < Types::BaseObject
-    field :task, [TaskType], null: false
+    field :tasks, [TaskType], null: false
 
-    def task
+    def tasks
       Task.order(created_at: :desc)
     end
   end

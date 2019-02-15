@@ -24,7 +24,7 @@ class App extends Component {
   }
 
   getTask = async () => {
-    const query = '{task{id description status}}'
+    const query = '{tasks{id description status}}'
     const response = await fetch(API, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -32,7 +32,7 @@ class App extends Component {
     })
     const task = await response.json()
     this.setState({
-      tasks: task.data.task,
+      tasks: task.data.tasks,
     })
   }
 
