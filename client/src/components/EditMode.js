@@ -1,7 +1,9 @@
 import React, { Component } from 'react'
 import { Input } from 'reactstrap'
 
-export default class EditMode extends Component {
+import withTaskService from '../hoc/withTaskService'
+
+class EditMode extends Component {
   state = {
     editMode: false,
   }
@@ -20,11 +22,10 @@ export default class EditMode extends Component {
 
   handleKeyDownTask = (event) => {
     if (event.key === 'Enter') {
-      const params = {
+      this.updateTask({
         id: this.props.id,
         description: event.target.value,
-      }
-      this.updateTask(params)
+      })
     } else if (event.key === 'Escape') {
       this.setState({
         editMode: false,
@@ -32,18 +33,16 @@ export default class EditMode extends Component {
     }
   }
 
-  updateTask = async (params) => {
-    const response = await fetch(this.props.api + params.id, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ description: params.description }),
-    })
-    const json = await response.json()
+  updateTask = async (input) => {
+    const task = await this.props.taskService.update({ input })
+
     this.props.onUpdate()
+
     this.setState({
       editMode: false,
     })
-    return json
+
+    return task
   }
 
   renderTask = () => {
@@ -62,3 +61,4 @@ export default class EditMode extends Component {
   }
 }
 
+export default withTaskService(EditMode)

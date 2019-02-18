@@ -1,44 +1,42 @@
 import React, { Component } from 'react'
 import Switch from 'react-switch'
 
+import withTaskService from '../hoc/withTaskService'
+
 const status = {
-  completed: 1,
-  inProgress: 0,
+  completed: 'COMPLETED',
+  inProgress: 'IN_PROGRESS',
 }
-export default class UpdateStatusMode extends Component {
+class UpdateStatusMode extends Component {
   static defaultProps = {
-    api: '',
     status: '',
     id: '',
     onUpdate: () => {},
   }
 
   handleChecked = (checked) => {
-    const params = {
+    this.updateStatus({
       id: this.props.id,
-      status: checked === true ? status.completed : status.inProgress,
-    }
-    this.updateStatus(params)
+      status: checked ? status.completed : status.inProgress,
+    })
   }
 
-  updateStatus = async (params) => {
-    const response = await fetch(this.props.api + params.id, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({ status: params.status }),
-    })
-    const json = await response.json()
+  updateStatus = async (input) => {
+    const task = await this.props.taskService.update({ input })
+
     this.props.onUpdate()
-    return json
+
+    return task
   }
 
   render() {
     return (
       <Switch
         onChange={this.handleChecked}
-        checked={this.props.status === 'completed'}
+        checked={this.props.status === status.completed}
       />
     )
   }
 }
 
+export default withTaskService(UpdateStatusMode)
