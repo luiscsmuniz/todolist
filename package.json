@@ -35,5 +35,8 @@
       "commit-msg": "commitlint -e $HUSKY_GIT_PARAMS",
       "pre-commit": "lint-staged"
     }
+  },
+  "dependencies": {
+    "styled-components": "^4.1.3"
   }
 }
