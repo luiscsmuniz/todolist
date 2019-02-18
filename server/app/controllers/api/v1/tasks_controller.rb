@@ -8,7 +8,7 @@ module Api::V1
     # GET /api/v1/tasks
 
     def index
-      @tasks = Task.order(:id)
+      @tasks = Task.order(created_at: :desc)
 
       render json: @tasks
     end
