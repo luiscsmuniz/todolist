@@ -40,25 +40,25 @@ class App extends Component {
 
   render() {
     return (
-      <Body>
-        <Container className="body-bg">
+      <Body color="282c34">
+        <Container>
           <Row>
-            <TaskTitle title="Todolist" size="10" offset="1" />
+            <TaskTitle title="Todolist" fontSize="4" color="white" size="10" offset="1" />
           </Row>
           <Row>
             <CreateMode placeholder="Digite sua tarefa..." onCreate={this.getTask} />
           </Row>
           <Row>
-            <Col md={{ size: 10, offset: 1 }} className="spacing-10">
+            <Col md={{ size: 10, offset: 1 }}>
               <Filter marginTop="10">
-                <ButtonGroup className="align-center">
+                <ButtonGroup>
                   <Button color="info" onClick={() => this.onRadioClick('ALL')} active={this.state.filter === 'ALL'}>Todos</Button>
                   <Button color="info" onClick={() => this.onRadioClick('IN_PROGRESS')} active={this.state.filter === 'IN_PROGRESS'}>Em progresso</Button>
                   <Button color="info" onClick={() => this.onRadioClick('COMPLETED')} active={this.state.filter === 'COMPLETED'}>Finalizado</Button>
                 </ButtonGroup>
               </Filter>
-              <List>
-                <ListGroup className="spacing-10">
+              <List marginTop="20">
+                <ListGroup>
                   {
                   this.getFilteredTasks().map((task) => (
                     <ListGroupItem key={task.id}>

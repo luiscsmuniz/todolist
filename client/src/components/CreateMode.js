@@ -42,7 +42,13 @@ class CreateMode extends Component {
   render() {
     return (
       <Col md={{ size: 10, offset: 1 }}>
-        <Input type="text" value={this.state.description} onKeyPress={this.handleKeyPress} onChange={this.handleChange} placeholder={this.props.placeholder} />
+        <Input
+          type="text"
+          value={this.state.description}
+          onKeyPress={this.handleKeyPress}
+          onChange={this.handleChange}
+          placeholder={this.props.placeholder}
+        />
       </Col>
     )
   }
