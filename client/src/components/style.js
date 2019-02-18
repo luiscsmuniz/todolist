@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import styled from 'styled-components'
 
 const BodyApp = styled.body`
-      background-color: #${props => props.color};
+      background-color: ${props => props.color};
       min-height: 100vh;
     `
 export class Body extends Component {
@@ -13,6 +13,10 @@ export class Body extends Component {
       </BodyApp>
     )
   }
+}
+
+Body.defaultProps = {
+  color: '#282c34',
 }
 
 const FilterApp = styled.div`

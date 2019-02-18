@@ -40,7 +40,7 @@ const DELETE_TASK_MUTATION = `
 
 const GET_TASKS_QUERY = `
   {
-    tasks{
+    tasks {
       id
       description
       status
@@ -86,6 +86,17 @@ const taskService = {
     })
     return fetchAPI.fetch(body)
   },
+
+  // all: async () => (
+  //   <Query query={GET_TASKS_QUERY}>
+  //     {({ loading, error, data }) => {
+  //       if (loading) return 'Carregando...'
+  //       if (error) return `Error! ${error.message}`
+
+  //       return data.tasks
+  //     }}
+  //   </Query>
+  // ),
 
   all: async () => {
     const body = JSON.stringify({

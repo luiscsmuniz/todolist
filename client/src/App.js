@@ -40,7 +40,7 @@ class App extends Component {
 
   render() {
     return (
-      <Body color="282c34">
+      <Body color="#282c34">
         <Container>
           <Row>
             <TaskTitle title="Todolist" fontSize="4" color="white" size="10" offset="1" />
