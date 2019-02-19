@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
 
-const BodyApp = styled.body`
+const BodyApp = styled.div`
       background-color: ${props => props.color};
       min-height: 100vh;
     `

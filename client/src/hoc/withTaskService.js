@@ -1,8 +1,12 @@
 import React from 'react'
+import ApolloClient from 'apollo-boost'
+import gql from 'graphql-tag'
 
-const API = 'http://localhost:3001/graphql/'
+const client = new ApolloClient({
+  uri: 'http://localhost:3001/graphql/',
+})
 
-const UPDATE_TASK_MUTATION = `
+const UPDATE_TASK_MUTATION = gql`
   mutation UpdateTaskMutation($input: UpdateTaskInput!) {
     updateTask(
       input: $input
@@ -14,7 +18,7 @@ const UPDATE_TASK_MUTATION = `
   }
 `
 
-const CREATE_TASK_MUTATION = `
+const CREATE_TASK_MUTATION = gql`
   mutation CreateTaskMutation($input: CreateTaskInput!) {
     createTask(
       input: $input
@@ -26,7 +30,7 @@ const CREATE_TASK_MUTATION = `
   }
 `
 
-const DELETE_TASK_MUTATION = `
+const DELETE_TASK_MUTATION = gql`
   mutation DeleteTaskMutation($id: ID!){
     deleteTask(
       id: $id
@@ -38,7 +42,7 @@ const DELETE_TASK_MUTATION = `
   }
 `
 
-const GET_TASKS_QUERY = `
+const GET_TASKS_QUERY = gql`
   {
     tasks {
       id
@@ -48,62 +52,26 @@ const GET_TASKS_QUERY = `
   }
 `
 
-const fetchAPI = {
-  fetch: async (body) => {
-    const response = await fetch(API, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body,
-    })
-    return response.json()
-  },
-}
-
 const taskService = {
-  update: async (variables) => {
-    const body = JSON.stringify({
-      query: UPDATE_TASK_MUTATION,
-      variables,
-    })
-    return fetchAPI.fetch(body)
-  },
+  update: (variables) => client.mutate({
+    mutation: UPDATE_TASK_MUTATION,
+    variables,
+  }),
 
-  create: async (variables) => {
-    const body = JSON.stringify({
-      query: CREATE_TASK_MUTATION,
-      variables,
-    })
-    return fetchAPI.fetch(body)
-  },
+  create: (variables) => client.mutate({
+    mutation: CREATE_TASK_MUTATION,
+    variables,
+  }),
 
-  delete: async (variables) => {
-    const body = JSON.stringify({
-      query: DELETE_TASK_MUTATION,
-      variables,
-    })
-    return fetchAPI.fetch(body)
-  },
+  delete: (variables) => client.mutate({
+    mutation: DELETE_TASK_MUTATION,
+    variables,
+  }),
 
-  // all: async () => (
-  //   <Query query={GET_TASKS_QUERY}>
-  //     {({ loading, error, data }) => {
-  //       if (loading) return 'Carregando...'
-  //       if (error) return `Error! ${error.message}`
-
-  //       return data.tasks
-  //     }}
-  //   </Query>
-  // ),
-
-  all: async () => {
-    const body = JSON.stringify({
-      query: GET_TASKS_QUERY,
-    })
-    return fetchAPI.fetch(body)
-  },
+  all: () => client.query({
+    query: GET_TASKS_QUERY,
+    fetchPolicy: 'network-only',
+  }),
 }
 
 const withTaskService = WrappedComponent => props => (
