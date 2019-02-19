@@ -1,10 +1,7 @@
-import React from 'react'
-import ApolloClient from 'apollo-boost'
+import React, { Component } from 'react'
+import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
-
-const client = new ApolloClient({
-  uri: 'http://localhost:3001/graphql/',
-})
+import _ from 'lodash/fp'
 
 const UPDATE_TASK_MUTATION = gql`
   mutation UpdateTaskMutation($input: UpdateTaskInput!) {
@@ -52,30 +49,37 @@ const GET_TASKS_QUERY = gql`
   }
 `
 
-const gqlFetch = {
-  mutate: (mutation, variables) => client.mutate({
+const withTaskService = WrappedComponent => class extends Component {
+  static displayName = `withTaskService(${WrappedComponent.name || WrappedComponent.displayName})`
+
+  createMutate = _.curry((mutation, variables) => this.props.client.mutate({
     mutation,
     variables,
-  }),
+  }))
 
-  query: (query, fetchPolicy) => client.query({
+  // eslint-disable-next-line react/sort-comp
+  query = (query) => this.props.client.query({
+    fetchPolicy: 'no-cache',
     query,
-    fetchPolicy,
-  }),
+  })
+
+  taskService = {
+    update: this.createMutate(UPDATE_TASK_MUTATION),
+    create: this.createMutate(CREATE_TASK_MUTATION),
+    delete: this.createMutate(DELETE_TASK_MUTATION),
+    all: () => this.query(GET_TASKS_QUERY),
+  }
+
+  render() {
+    const { client, ...props } = this.props
+
+    return (
+      <WrappedComponent taskService={this.taskService} {...props} />
+    )
+  }
 }
 
-const taskService = {
-  update: (variables) => gqlFetch.mutate(UPDATE_TASK_MUTATION, variables),
-
-  create: (variables) => gqlFetch.mutate(CREATE_TASK_MUTATION, variables),
-
-  delete: (variables) => gqlFetch.mutate(DELETE_TASK_MUTATION, variables),
-
-  all: () => gqlFetch.query(GET_TASKS_QUERY, 'no-cache'),
-}
-
-const withTaskService = WrappedComponent => props => (
-  <WrappedComponent taskService={taskService} {...props} />
+export default _.flow(
+  withTaskService,
+  withApollo,
 )
-
-export default withTaskService
