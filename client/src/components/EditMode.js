@@ -4,19 +4,17 @@ import { Input } from 'reactstrap'
 import withTaskService from '../hoc/withTaskService'
 
 class EditMode extends Component {
-  state = {
-    editMode: false,
+  static defaultProps = {
+    onUpdate: () => {},
   }
 
-  static defaultProps = {
-    id: '',
-    description: '',
-    onUpdate: () => {},
+  state = {
+    editing: false,
   }
 
   handleEditMode = () => {
     this.setState({
-      editMode: true,
+      editing: true,
     })
   }
 
@@ -28,7 +26,7 @@ class EditMode extends Component {
       })
     } else if (event.key === 'Escape') {
       this.setState({
-        editMode: false,
+        editing: false,
       })
     }
   }
@@ -39,25 +37,29 @@ class EditMode extends Component {
     this.props.onUpdate()
 
     this.setState({
-      editMode: false,
+      editing: false,
     })
 
     return task
   }
 
-  renderTask = () => {
-    if (this.state.editMode) {
-      return <Input type="text" autoFocus onKeyDown={this.handleKeyDownTask} defaultValue={this.props.description} />
+  render() {
+    if (this.state.editing) {
+      return (
+        <Input
+          type="text"
+          autoFocus
+          onKeyDown={this.handleKeyDownTask}
+          defaultValue={this.props.description}
+        />
+      )
     }
+
     return (
-      <div onDoubleClick={this.handleEditMode} id={String(this.props.id)}>
-        { this.props.description }
+      <div onDoubleClick={this.handleEditMode}>
+        {this.props.description}
       </div>
     )
-  }
-
-  render() {
-    return this.renderTask()
   }
 }
 

@@ -3,13 +3,13 @@ import { Input, Col } from 'reactstrap'
 import withTaskService from '../hoc/withTaskService'
 
 class CreateMode extends Component {
-  state = {
-    description: '',
-  }
-
   static defaultProps = {
     placeholder: 'Digite a tarefa',
     onCreate: () => {},
+  }
+
+  state = {
+    description: '',
   }
 
   handleKeyPress = (event) => {
@@ -20,16 +20,16 @@ class CreateMode extends Component {
   }
 
   handleChange = (event) => {
-    this.setState(
-      {
-        description: event.target.value,
-      },
-    )
+    this.setState({
+      description: event.target.value,
+    })
   }
 
   createTask = async (input) => {
     const task = await this.props.taskService.create({ input })
-    this.props.onCreate()
+
+    this.props.onCreate(task)
+
     return task
   }
 

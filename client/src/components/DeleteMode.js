@@ -6,7 +6,6 @@ import withTaskService from '../hoc/withTaskService'
 
 class DeleteMode extends Component {
   static defaultProps = {
-    id: '',
     onDelete: () => {},
   }
 
@@ -17,25 +16,35 @@ class DeleteMode extends Component {
       buttons: [
         {
           label: 'Sim',
-          onClick: () => this.deleteTask({ id: this.props.id }),
+          onClick: this.deleteTask,
         },
         {
           label: 'Não',
-          onClick: () => false,
         },
       ],
     })
   }
 
-  deleteTask = async (input) => {
-    const task = await this.props.taskService.delete(input)
-    this.props.onDelete()
+  deleteTask = async () => {
+    const task = await this.props.taskService.delete({
+      id: this.props.id,
+    })
+
+    this.props.onDelete(task)
+
     return task
   }
 
   render() {
     return (
-      <Button color="danger" value={this.props.id} onClick={this.handleDelete} className="float-right">Excluir</Button>
+      <Button
+        className="float-right"
+        color="danger"
+        value={this.props.id}
+        onClick={this.handleDelete}
+      >
+        Excluir
+      </Button>
     )
   }
 }

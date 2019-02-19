@@ -13,9 +13,7 @@ export default class TaskTitle extends Component {
 }
 
 TaskTitle.defaultProps = {
-  size: '',
-  offset: '',
   title: 'Todolist',
-  fontSize: '3',
+  fontSize: 3,
   color: 'white',
 }

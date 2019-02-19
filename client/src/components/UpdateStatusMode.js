@@ -9,8 +9,6 @@ const status = {
 }
 class UpdateStatusMode extends Component {
   static defaultProps = {
-    status: '',
-    id: '',
     onUpdate: () => {},
   }
 
@@ -24,7 +22,7 @@ class UpdateStatusMode extends Component {
   updateStatus = async (input) => {
     const task = await this.props.taskService.update({ input })
 
-    this.props.onUpdate()
+    this.props.onUpdate(task)
 
     return task
   }
