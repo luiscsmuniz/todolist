@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Switch from 'react-switch'
 
 import withTaskService from '../hoc/withTaskService'
@@ -7,9 +8,15 @@ const status = {
   completed: 'COMPLETED',
   inProgress: 'IN_PROGRESS',
 }
-class UpdateStatusMode extends Component {
+class UpdateStatus extends Component {
   static defaultProps = {
     onUpdate: () => {},
+  }
+
+  static propTypes = {
+    id: PropTypes.number.isRequired,
+    status: PropTypes.string.isRequired,
+    onUpdate: PropTypes.func,
   }
 
   handleChecked = (checked) => {
@@ -37,4 +44,4 @@ class UpdateStatusMode extends Component {
   }
 }
 
-export default withTaskService(UpdateStatusMode)
+export default withTaskService(UpdateStatus)

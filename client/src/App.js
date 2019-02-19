@@ -2,10 +2,10 @@ import React, { Component } from 'react'
 import { Container, Row, Col, ListGroup, ListGroupItem, Button, ButtonGroup } from 'reactstrap'
 import { Body, Filter, List } from './components/style'
 import TaskTitle from './components/TaskTitle'
-import EditMode from './components/EditMode'
-import CreateMode from './components/CreateMode'
-import DeleteMode from './components/DeleteMode'
-import UpdateStatusMode from './components/UpdateStatusMode'
+import UpdateTaskField from './components/UpdateTaskField'
+import CreateTaskInput from './components/CreateTaskInput'
+import DeleteTaskButton from './components/DeleteTaskButton'
+import UpdateStatus from './components/UpdateStatus'
 import withTaskService from './hoc/withTaskService'
 
 class App extends Component {
@@ -46,7 +46,7 @@ class App extends Component {
             <TaskTitle title="Todolist" fontSize="4" color="white" size="10" offset="1" />
           </Row>
           <Row>
-            <CreateMode placeholder="Digite sua tarefa..." onCreate={this.getTask} />
+            <CreateTaskInput placeholder="Digite sua tarefa..." onCreate={this.getTask} />
           </Row>
           <Row>
             <Col md={{ size: 10, offset: 1 }}>
@@ -62,17 +62,17 @@ class App extends Component {
                   {
                   this.getFilteredTasks().map((task) => (
                     <ListGroupItem key={task.id}>
-                      <EditMode
+                      <UpdateTaskField
                         description={task.description}
                         id={task.id}
                         onUpdate={this.getTask}
                       />
-                      <UpdateStatusMode
+                      <UpdateStatus
                         id={task.id}
                         onUpdate={this.getTask}
                         status={task.status}
                       />
-                      <DeleteMode onDelete={this.getTask} id={task.id} />
+                      <DeleteTaskButton onDelete={this.getTask} id={task.id} />
                     </ListGroupItem>
                   ))
                   }

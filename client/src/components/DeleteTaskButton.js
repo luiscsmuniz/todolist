@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
 import { Button } from 'reactstrap'
+import PropTypes from 'prop-types'
 import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import withTaskService from '../hoc/withTaskService'
 
-class DeleteMode extends Component {
+class DeleteTaskButton extends Component {
   static defaultProps = {
     onDelete: () => {},
+  }
+
+  static propTypes = {
+    id: PropTypes.number.isRequired,
+    onDelete: PropTypes.func,
   }
 
   handleDelete = () => {
@@ -49,5 +55,5 @@ class DeleteMode extends Component {
   }
 }
 
-export default withTaskService(DeleteMode)
+export default withTaskService(DeleteTaskButton)
 

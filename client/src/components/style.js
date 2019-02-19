@@ -30,7 +30,6 @@ export const Title = styled.h1`
   font-size: ${props => props.fontSize}em;
   text-align: center;
   color: ${props => props.color};
-
   &:hover {
     color: rgba(200,200,200,1);
     transition: 0.5s;

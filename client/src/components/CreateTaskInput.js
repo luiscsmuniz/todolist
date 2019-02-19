@@ -1,11 +1,17 @@
 import React, { Component } from 'react'
 import { Input, Col } from 'reactstrap'
+import PropTypes from 'prop-types'
 import withTaskService from '../hoc/withTaskService'
 
-class CreateMode extends Component {
+class CreateTaskInput extends Component {
   static defaultProps = {
     placeholder: 'Digite a tarefa',
     onCreate: () => {},
+  }
+
+  static propTypes = {
+    placeholder: PropTypes.string,
+    onCreate: PropTypes.func,
   }
 
   state = {
@@ -54,4 +60,4 @@ class CreateMode extends Component {
   }
 }
 
-export default withTaskService(CreateMode)
+export default withTaskService(CreateTaskInput)

@@ -1,11 +1,18 @@
 import React, { Component } from 'react'
 import { Input } from 'reactstrap'
+import PropTypes from 'prop-types'
 
 import withTaskService from '../hoc/withTaskService'
 
-class EditMode extends Component {
+class UpdateTaskField extends Component {
   static defaultProps = {
     onUpdate: () => {},
+  }
+
+  static propTypes = {
+    onUpdate: PropTypes.func,
+    description: PropTypes.string.isRequired,
+    id: PropTypes.number.isRequired,
   }
 
   state = {
@@ -63,4 +70,4 @@ class EditMode extends Component {
   }
 }
 
-export default withTaskService(EditMode)
+export default withTaskService(UpdateTaskField)
