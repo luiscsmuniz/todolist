@@ -52,26 +52,26 @@ const GET_TASKS_QUERY = gql`
   }
 `
 
+const gqlFetch = {
+  mutate: (mutation, variables) => client.mutate({
+    mutation,
+    variables,
+  }),
+
+  query: (query, fetchPolicy) => client.query({
+    query,
+    fetchPolicy,
+  }),
+}
+
 const taskService = {
-  update: (variables) => client.mutate({
-    mutation: UPDATE_TASK_MUTATION,
-    variables,
-  }),
+  update: (variables) => gqlFetch.mutate(UPDATE_TASK_MUTATION, variables),
 
-  create: (variables) => client.mutate({
-    mutation: CREATE_TASK_MUTATION,
-    variables,
-  }),
+  create: (variables) => gqlFetch.mutate(CREATE_TASK_MUTATION, variables),
 
-  delete: (variables) => client.mutate({
-    mutation: DELETE_TASK_MUTATION,
-    variables,
-  }),
+  delete: (variables) => gqlFetch.mutate(DELETE_TASK_MUTATION, variables),
 
-  all: () => client.query({
-    query: GET_TASKS_QUERY,
-    fetchPolicy: 'network-only',
-  }),
+  all: () => gqlFetch.query(GET_TASKS_QUERY, 'no-cache'),
 }
 
 const withTaskService = WrappedComponent => props => (
