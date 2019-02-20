@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { Input, Col } from 'reactstrap'
 import PropTypes from 'prop-types'
 import withTaskService from '../hoc/withTaskService'
 
-class CreateTaskInput extends Component {
+class CreateTaskInput extends PureComponent {
   static defaultProps = {
     placeholder: 'Digite a tarefa',
     onCreate: () => {},

@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unused-state */
 import React, { Component } from 'react'
 import styled from 'styled-components'
 import withTaskService from '../hoc/withTaskService'
@@ -13,10 +14,6 @@ Body.defaultProps = {
 }
 
 class TasksProvider extends Component {
-  state = {
-    tasks: [],
-  }
-
   componentDidMount() {
     this.refetchTasks()
   }
@@ -28,15 +25,15 @@ class TasksProvider extends Component {
     })
   }
 
-  render() {
-    const { refetchTasks } = this
-    const value = {
-      ...this.state,
-      refetchTasks,
-    }
+  // eslint-disable-next-line react/sort-comp
+  state = {
+    tasks: [],
+    refetchTasks: this.refetchTasks,
+  }
 
+  render() {
     return (
-      <TasksContext.Provider value={value}>
+      <TasksContext.Provider value={this.state}>
         {this.props.children}
       </TasksContext.Provider>
     )

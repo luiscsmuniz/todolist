@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { withApollo } from 'react-apollo'
 import gql from 'graphql-tag'
 import _ from 'lodash/fp'
@@ -49,7 +49,7 @@ const GET_TASKS_QUERY = gql`
   }
 `
 
-const withTaskService = WrappedComponent => class extends Component {
+const withTaskService = WrappedComponent => class extends PureComponent {
   static displayName = `withTaskService(${WrappedComponent.name || WrappedComponent.displayName})`
 
   createMutate = _.curry((mutation, variables) => this.props.client.mutate({
