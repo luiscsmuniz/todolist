@@ -26,7 +26,7 @@ export default class FilterTask extends Component {
     return (
       <TasksContext.Consumer>
         {
-          ({ tasks, getTask }) => (
+          ({ tasks }) => (
             <div>
               <Filter marginTop="10">
                 <ButtonGroup>
@@ -38,7 +38,6 @@ export default class FilterTask extends Component {
               <ListTask
                 filter={this.state.filter}
                 tasks={tasks}
-                onSuccess={getTask}
               />
             </div>
           )
