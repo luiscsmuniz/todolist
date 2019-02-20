@@ -6,6 +6,12 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import TodolistProvider from './TodolistProvider'
 
+if (process.env.NODE_ENV !== 'production') {
+  // eslint-disable-next-line
+  const { whyDidYouUpdate } = require('why-did-you-update')
+  whyDidYouUpdate(React)
+}
+
 ReactDOM.render((
   <TodolistProvider>
     <App />
