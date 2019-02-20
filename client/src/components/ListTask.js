@@ -32,29 +32,27 @@ export default class ListTask extends Component {
   render() {
     return (
       <TasksContext.Consumer>
-        {
-          ({ tasks, getTask }) => (
-            <List marginTop="20">
-              <ListGroup>
-                {
-                this.getFilteredTasks(tasks).map((task) => (
-                  <ListGroupItem key={task.id}>
-                    <UpdateTaskField
-                      tasks={task}
-                      onUpdate={getTask}
-                    />
-                    <UpdateStatus
-                      tasks={task}
-                      onUpdate={getTask}
-                    />
-                    <DeleteTaskButton onDelete={getTask} id={task.id} />
-                  </ListGroupItem>
-                ))
-                }
-              </ListGroup>
-            </List>
-          )
-        }
+        {({ tasks, refetchTasks }) => (
+          <List marginTop="20">
+            <ListGroup>
+              {
+              this.getFilteredTasks(tasks).map((task) => (
+                <ListGroupItem key={task.id}>
+                  <UpdateTaskField
+                    tasks={task}
+                    onUpdate={refetchTasks}
+                  />
+                  <UpdateStatus
+                    tasks={task}
+                    onUpdate={refetchTasks}
+                  />
+                  <DeleteTaskButton onDelete={refetchTasks} id={task.id} />
+                </ListGroupItem>
+              ))
+              }
+            </ListGroup>
+          </List>
+        )}
       </TasksContext.Consumer>
     )
   }
