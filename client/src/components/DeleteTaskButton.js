@@ -1,13 +1,18 @@
 import React, { Component } from 'react'
 import { Button } from 'reactstrap'
+import PropTypes from 'prop-types'
 import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import withTaskService from '../hoc/withTaskService'
 
-class DeleteMode extends Component {
+class DeleteTaskButton extends Component {
   static defaultProps = {
-    id: '',
     onDelete: () => {},
+  }
+
+  static propTypes = {
+    id: PropTypes.string.isRequired,
+    onDelete: PropTypes.func,
   }
 
   handleDelete = () => {
@@ -17,28 +22,38 @@ class DeleteMode extends Component {
       buttons: [
         {
           label: 'Sim',
-          onClick: () => this.deleteTask({ id: this.props.id }),
+          onClick: this.deleteTask,
         },
         {
           label: 'Não',
-          onClick: () => false,
         },
       ],
     })
   }
 
-  deleteTask = async (input) => {
-    const task = await this.props.taskService.delete(input)
-    this.props.onDelete()
+  deleteTask = async () => {
+    const task = await this.props.taskService.delete({
+      id: this.props.id,
+    })
+
+    this.props.onDelete(task)
+
     return task
   }
 
   render() {
     return (
-      <Button color="danger" value={this.props.id} onClick={this.handleDelete} className="float-right">Excluir</Button>
+      <Button
+        className="float-right"
+        color="danger"
+        value={this.props.id}
+        onClick={this.handleDelete}
+      >
+        Excluir
+      </Button>
     )
   }
 }
 
-export default withTaskService(DeleteMode)
+export default withTaskService(DeleteTaskButton)
 

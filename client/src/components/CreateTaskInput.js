@@ -1,15 +1,21 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { Input, Col } from 'reactstrap'
+import PropTypes from 'prop-types'
 import withTaskService from '../hoc/withTaskService'
 
-class CreateMode extends Component {
-  state = {
-    description: '',
-  }
-
+class CreateTaskInput extends PureComponent {
   static defaultProps = {
     placeholder: 'Digite a tarefa',
     onCreate: () => {},
+  }
+
+  static propTypes = {
+    placeholder: PropTypes.string,
+    onCreate: PropTypes.func,
+  }
+
+  state = {
+    description: '',
   }
 
   handleKeyPress = (event) => {
@@ -20,16 +26,16 @@ class CreateMode extends Component {
   }
 
   handleChange = (event) => {
-    this.setState(
-      {
-        description: event.target.value,
-      },
-    )
+    this.setState({
+      description: event.target.value,
+    })
   }
 
   createTask = async (input) => {
     const task = await this.props.taskService.create({ input })
-    this.props.onCreate()
+
+    this.props.onCreate(task)
+
     return task
   }
 
@@ -42,10 +48,16 @@ class CreateMode extends Component {
   render() {
     return (
       <Col md={{ size: 10, offset: 1 }}>
-        <Input type="text" value={this.state.description} onKeyPress={this.handleKeyPress} onChange={this.handleChange} placeholder={this.props.placeholder} />
+        <Input
+          type="text"
+          value={this.state.description}
+          onKeyPress={this.handleKeyPress}
+          onChange={this.handleChange}
+          placeholder={this.props.placeholder}
+        />
       </Col>
     )
   }
 }
 
-export default withTaskService(CreateMode)
+export default withTaskService(CreateTaskInput)

@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { PureComponent } from 'react'
+import { withApollo } from 'react-apollo'
+import gql from 'graphql-tag'
+import _ from 'lodash/fp'
 
-const API = 'http://localhost:3001/graphql/'
-
-const UPDATE_TASK_MUTATION = `
+const UPDATE_TASK_MUTATION = gql`
   mutation UpdateTaskMutation($input: UpdateTaskInput!) {
     updateTask(
       input: $input
@@ -14,7 +15,7 @@ const UPDATE_TASK_MUTATION = `
   }
 `
 
-const CREATE_TASK_MUTATION = `
+const CREATE_TASK_MUTATION = gql`
   mutation CreateTaskMutation($input: CreateTaskInput!) {
     createTask(
       input: $input
@@ -26,7 +27,7 @@ const CREATE_TASK_MUTATION = `
   }
 `
 
-const DELETE_TASK_MUTATION = `
+const DELETE_TASK_MUTATION = gql`
   mutation DeleteTaskMutation($id: ID!){
     deleteTask(
       id: $id
@@ -38,9 +39,9 @@ const DELETE_TASK_MUTATION = `
   }
 `
 
-const GET_TASKS_QUERY = `
+const GET_TASKS_QUERY = gql`
   {
-    tasks{
+    tasks {
       id
       description
       status
@@ -48,55 +49,37 @@ const GET_TASKS_QUERY = `
   }
 `
 
-const fetchAPI = {
-  fetch: async (body) => {
-    const response = await fetch(API, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body,
-    })
-    return response.json()
-  },
+const withTaskService = WrappedComponent => class extends PureComponent {
+  static displayName = `withTaskService(${WrappedComponent.name || WrappedComponent.displayName})`
+
+  createMutate = _.curry((mutation, variables) => this.props.client.mutate({
+    mutation,
+    variables,
+  }))
+
+  // eslint-disable-next-line react/sort-comp
+  query = (query) => this.props.client.query({
+    fetchPolicy: 'no-cache',
+    query,
+  })
+
+  taskService = {
+    update: this.createMutate(UPDATE_TASK_MUTATION),
+    create: this.createMutate(CREATE_TASK_MUTATION),
+    delete: this.createMutate(DELETE_TASK_MUTATION),
+    all: () => this.query(GET_TASKS_QUERY),
+  }
+
+  render() {
+    const { client, ...props } = this.props
+
+    return (
+      <WrappedComponent taskService={this.taskService} {...props} />
+    )
+  }
 }
 
-const taskService = {
-  update: async (variables) => {
-    const body = JSON.stringify({
-      query: UPDATE_TASK_MUTATION,
-      variables,
-    })
-    return fetchAPI.fetch(body)
-  },
-
-  create: async (variables) => {
-    const body = JSON.stringify({
-      query: CREATE_TASK_MUTATION,
-      variables,
-    })
-    return fetchAPI.fetch(body)
-  },
-
-  delete: async (variables) => {
-    const body = JSON.stringify({
-      query: DELETE_TASK_MUTATION,
-      variables,
-    })
-    return fetchAPI.fetch(body)
-  },
-
-  all: async () => {
-    const body = JSON.stringify({
-      query: GET_TASKS_QUERY,
-    })
-    return fetchAPI.fetch(body)
-  },
-}
-
-const withTaskService = WrappedComponent => props => (
-  <WrappedComponent taskService={taskService} {...props} />
+export default _.flow(
+  withTaskService,
+  withApollo,
 )
-
-export default withTaskService

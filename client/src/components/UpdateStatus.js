@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import Switch from 'react-switch'
 
 import withTaskService from '../hoc/withTaskService'
@@ -7,16 +8,19 @@ const status = {
   completed: 'COMPLETED',
   inProgress: 'IN_PROGRESS',
 }
-class UpdateStatusMode extends Component {
+class UpdateStatus extends Component {
   static defaultProps = {
-    status: '',
-    id: '',
     onUpdate: () => {},
+  }
+
+  static propTypes = {
+    tasks: PropTypes.objectOf(Object).isRequired,
+    onUpdate: PropTypes.func,
   }
 
   handleChecked = (checked) => {
     this.updateStatus({
-      id: this.props.id,
+      id: this.props.tasks.id,
       status: checked ? status.completed : status.inProgress,
     })
   }
@@ -24,7 +28,7 @@ class UpdateStatusMode extends Component {
   updateStatus = async (input) => {
     const task = await this.props.taskService.update({ input })
 
-    this.props.onUpdate()
+    this.props.onUpdate(task)
 
     return task
   }
@@ -33,10 +37,10 @@ class UpdateStatusMode extends Component {
     return (
       <Switch
         onChange={this.handleChecked}
-        checked={this.props.status === status.completed}
+        checked={this.props.tasks.status === status.completed}
       />
     )
   }
 }
 
-export default withTaskService(UpdateStatusMode)
+export default withTaskService(UpdateStatus)
