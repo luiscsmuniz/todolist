@@ -18,6 +18,10 @@ class TasksProvider extends Component {
     this.refetchTasks()
   }
 
+  onRadioClick = (filter) => {
+    this.setState({ filter })
+  }
+
   refetchTasks = async () => {
     const task = await this.props.taskService.all()
     this.setState({
@@ -25,10 +29,22 @@ class TasksProvider extends Component {
     })
   }
 
+  getFilteredTasks = (tasks) => (
+    tasks.filter((task) => {
+      if (this.state.filter === 'ALL') {
+        return task
+      }
+      return this.state.filter === task.status
+    })
+  )
+
   // eslint-disable-next-line react/sort-comp
   state = {
     tasks: [],
     refetchTasks: this.refetchTasks,
+    filter: 'ALL',
+    getFilteredTasks: this.getFilteredTasks,
+    onRadioClick: this.onRadioClick,
   }
 
   render() {
