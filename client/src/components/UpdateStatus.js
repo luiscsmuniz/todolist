@@ -14,14 +14,13 @@ class UpdateStatus extends Component {
   }
 
   static propTypes = {
-    id: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
+    tasks: PropTypes.objectOf(Object).isRequired,
     onUpdate: PropTypes.func,
   }
 
   handleChecked = (checked) => {
     this.updateStatus({
-      id: this.props.id,
+      id: this.props.tasks.id,
       status: checked ? status.completed : status.inProgress,
     })
   }
@@ -38,7 +37,7 @@ class UpdateStatus extends Component {
     return (
       <Switch
         onChange={this.handleChecked}
-        checked={this.props.status === status.completed}
+        checked={this.props.tasks.status === status.completed}
       />
     )
   }

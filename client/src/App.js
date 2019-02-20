@@ -5,7 +5,6 @@ import TaskTitle from './components/TaskTitle'
 import CreateTaskInput from './components/CreateTaskInput'
 import withTaskService from './hoc/withTaskService'
 import FilterTask from './components/FilterTask'
-import ListTask from './components/ListTask'
 
 const Body = styled.div`
   background-color: ${props => props.color};
@@ -18,7 +17,6 @@ Body.defaultProps = {
 class App extends Component {
   state = {
     tasks: [],
-    filter: 'ALL',
   }
 
   componentDidMount() {
@@ -30,10 +28,6 @@ class App extends Component {
     this.setState({
       tasks: task.data.tasks,
     })
-  }
-
-  getFilter = (filter) => {
-    this.setState({ filter })
   }
 
   render() {
@@ -48,11 +42,9 @@ class App extends Component {
           </Row>
           <Row>
             <Col md={{ size: 10, offset: 1 }}>
-              <FilterTask filter={this.getFilter} />
-              <ListTask
-                filter={this.state.filter}
+              <FilterTask
                 tasks={this.state.tasks}
-                getTask={this.getTask}
+                onSuccess={this.getTask}
               />
             </Col>
           </Row>

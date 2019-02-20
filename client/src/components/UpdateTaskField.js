@@ -11,8 +11,7 @@ class UpdateTaskField extends Component {
 
   static propTypes = {
     onUpdate: PropTypes.func,
-    description: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
+    tasks: PropTypes.objectOf(Object).isRequired,
   }
 
   state = {
@@ -28,7 +27,7 @@ class UpdateTaskField extends Component {
   handleKeyDownTask = (event) => {
     if (event.key === 'Enter') {
       this.updateTask({
-        id: this.props.id,
+        id: this.props.tasks.id,
         description: event.target.value,
       })
     } else if (event.key === 'Escape') {
@@ -57,14 +56,14 @@ class UpdateTaskField extends Component {
           type="text"
           autoFocus
           onKeyDown={this.handleKeyDownTask}
-          defaultValue={this.props.description}
+          defaultValue={this.props.tasks.description}
         />
       )
     }
 
     return (
       <div onDoubleClick={this.handleEditMode}>
-        {this.props.description}
+        {this.props.tasks.description}
       </div>
     )
   }

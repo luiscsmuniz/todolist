@@ -15,9 +15,14 @@ List.defaultProps = {
 }
 
 export default class ListTask extends Component {
+  static defaultProps ={
+    onSuccess: () => {},
+  }
+
   static propTypes = {
-    tasks: PropTypes.instanceOf(Array).isRequired,
+    tasks: PropTypes.arrayOf(Array).isRequired,
     filter: PropTypes.string.isRequired,
+    onSuccess: PropTypes.func,
   }
 
   getFilteredTasks = () => (
@@ -37,16 +42,14 @@ export default class ListTask extends Component {
           this.getFilteredTasks().map((task) => (
             <ListGroupItem key={task.id}>
               <UpdateTaskField
-                description={task.description}
-                id={task.id}
-                onUpdate={this.props.getTask}
+                tasks={task}
+                onUpdate={this.props.onSuccess}
               />
               <UpdateStatus
-                id={task.id}
-                onUpdate={this.props.getTask}
-                status={task.status}
+                tasks={task}
+                onUpdate={this.props.onSuccess}
               />
-              <DeleteTaskButton onDelete={this.props.getTask} id={task.id} />
+              <DeleteTaskButton onDelete={this.props.onSuccess} id={task.id} />
             </ListGroupItem>
           ))
           }
