@@ -5,6 +5,7 @@ import TaskTitle from './components/TaskTitle'
 import CreateTaskInput from './components/CreateTaskInput'
 import withTaskService from './hoc/withTaskService'
 import FilterTask from './components/FilterTask'
+import TasksContext from './components/TasksContext'
 
 const Body = styled.div`
   background-color: ${props => props.color};
@@ -14,6 +15,7 @@ const Body = styled.div`
 Body.defaultProps = {
   color: '#282c34',
 }
+
 class App extends Component {
   state = {
     tasks: [],
@@ -31,25 +33,30 @@ class App extends Component {
   }
 
   render() {
+    const { getTask } = this
+    const value = {
+      ...this.state,
+      getTask,
+    }
+
     return (
-      <Body color="#282c34">
-        <Container>
-          <Row>
-            <TaskTitle title="Todolist" fontSize={4} color="white" size={10} offset={1} />
-          </Row>
-          <Row>
-            <CreateTaskInput placeholder="Digite sua tarefa..." onCreate={this.getTask} />
-          </Row>
-          <Row>
-            <Col md={{ size: 10, offset: 1 }}>
-              <FilterTask
-                tasks={this.state.tasks}
-                onSuccess={this.getTask}
-              />
-            </Col>
-          </Row>
-        </Container>
-      </Body>
+      <TasksContext.Provider value={value}>
+        <Body color="#282c34">
+          <Container>
+            <Row>
+              <TaskTitle title="Todolist" fontSize={4} color="white" size={10} offset={1} />
+            </Row>
+            <Row>
+              <CreateTaskInput placeholder="Digite sua tarefa..." onCreate={this.getTask} />
+            </Row>
+            <Row>
+              <Col md={{ size: 10, offset: 1 }}>
+                <FilterTask />
+              </Col>
+            </Row>
+          </Container>
+        </Body>
+      </TasksContext.Provider>
     )
   }
 }
