@@ -14,7 +14,7 @@ class UpdateStatus extends Component {
   }
 
   static propTypes = {
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     status: PropTypes.string.isRequired,
     onUpdate: PropTypes.func,
   }

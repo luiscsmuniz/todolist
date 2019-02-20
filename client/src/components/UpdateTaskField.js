@@ -12,7 +12,7 @@ class UpdateTaskField extends Component {
   static propTypes = {
     onUpdate: PropTypes.func,
     description: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
   }
 
   state = {

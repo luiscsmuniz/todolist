@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
-import { Container, Row, Col, ListGroup, ListGroupItem, Button, ButtonGroup } from 'reactstrap'
-import { Body, Filter, List } from './components/style'
+import { Container, Row, Col } from 'reactstrap'
+import styled from 'styled-components'
 import TaskTitle from './components/TaskTitle'
-import UpdateTaskField from './components/UpdateTaskField'
 import CreateTaskInput from './components/CreateTaskInput'
-import DeleteTaskButton from './components/DeleteTaskButton'
-import UpdateStatus from './components/UpdateStatus'
 import withTaskService from './hoc/withTaskService'
+import FilterTask from './components/FilterTask'
+import ListTask from './components/ListTask'
 
+const Body = styled.div`
+  background-color: ${props => props.color};
+  min-height: 100vh;
+`
+
+Body.defaultProps = {
+  color: '#282c34',
+}
 class App extends Component {
   state = {
     tasks: [],
@@ -18,10 +25,6 @@ class App extends Component {
     this.getTask()
   }
 
-  onRadioClick(filter) {
-    this.setState({ filter })
-  }
-
   getTask = async () => {
     const task = await this.props.taskService.all()
     this.setState({
@@ -29,55 +32,28 @@ class App extends Component {
     })
   }
 
-  getFilteredTasks = () => (
-    this.state.tasks.filter((task) => {
-      if (this.state.filter === 'ALL') {
-        return task
-      }
-      return this.state.filter === task.status
-    })
-  )
+  getFilter = (filter) => {
+    this.setState({ filter })
+  }
 
   render() {
     return (
       <Body color="#282c34">
         <Container>
           <Row>
-            <TaskTitle title="Todolist" fontSize="4" color="white" size="10" offset="1" />
+            <TaskTitle title="Todolist" fontSize={4} color="white" size={10} offset={1} />
           </Row>
           <Row>
             <CreateTaskInput placeholder="Digite sua tarefa..." onCreate={this.getTask} />
           </Row>
           <Row>
             <Col md={{ size: 10, offset: 1 }}>
-              <Filter marginTop="10">
-                <ButtonGroup>
-                  <Button color="info" onClick={() => this.onRadioClick('ALL')} active={this.state.filter === 'ALL'}>Todos</Button>
-                  <Button color="info" onClick={() => this.onRadioClick('IN_PROGRESS')} active={this.state.filter === 'IN_PROGRESS'}>Em progresso</Button>
-                  <Button color="info" onClick={() => this.onRadioClick('COMPLETED')} active={this.state.filter === 'COMPLETED'}>Finalizado</Button>
-                </ButtonGroup>
-              </Filter>
-              <List marginTop="20">
-                <ListGroup>
-                  {
-                  this.getFilteredTasks().map((task) => (
-                    <ListGroupItem key={task.id}>
-                      <UpdateTaskField
-                        description={task.description}
-                        id={task.id}
-                        onUpdate={this.getTask}
-                      />
-                      <UpdateStatus
-                        id={task.id}
-                        onUpdate={this.getTask}
-                        status={task.status}
-                      />
-                      <DeleteTaskButton onDelete={this.getTask} id={task.id} />
-                    </ListGroupItem>
-                  ))
-                  }
-                </ListGroup>
-              </List>
+              <FilterTask filter={this.getFilter} />
+              <ListTask
+                filter={this.state.filter}
+                tasks={this.state.tasks}
+                getTask={this.getTask}
+              />
             </Col>
           </Row>
         </Container>

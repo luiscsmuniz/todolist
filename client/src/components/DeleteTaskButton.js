@@ -11,7 +11,7 @@ class DeleteTaskButton extends Component {
   }
 
   static propTypes = {
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
     onDelete: PropTypes.func,
   }
 
