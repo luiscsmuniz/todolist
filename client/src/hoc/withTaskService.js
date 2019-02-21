@@ -41,7 +41,7 @@ const DELETE_TASK_MUTATION = gql`
 
 const GET_TASKS_QUERY = gql`
   {
-    tasks {
+    tasks{
       id
       description
       status
