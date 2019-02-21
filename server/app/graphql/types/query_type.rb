@@ -25,9 +25,11 @@ module Types
         )
       end
 
+      next_page = payload.any? && Task.where('tasks.id > :id', id: payload.last[:id]) ? true : false
+
       {
         payload: payload,
-
+        page_info: { has_next_page: next_page },
       }
     end
   end
