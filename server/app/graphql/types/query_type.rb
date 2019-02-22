@@ -22,7 +22,7 @@ module Types
 
       {
         payload: payload,
-        page_info: { has_next_page: next_page >= first },
+        page_info: { has_next_page: next_page >= 1 },
       }
     end
   end
