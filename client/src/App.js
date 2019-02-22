@@ -27,7 +27,7 @@ const App = () => (
         <Row>
           <TasksContext.Consumer>
             {({ refetchTasks }) => (
-              <CreateTaskInput placeholder="Digite sua tarefa..." onCreate={refetchTasks} />
+              <CreateTaskInput placeholder="Digite sua tarefa..." onCreate={() => refetchTasks({ after: 0, first: 5 })} />
             )}
           </TasksContext.Consumer>
         </Row>

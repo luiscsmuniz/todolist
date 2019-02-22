@@ -40,8 +40,8 @@ const DELETE_TASK_MUTATION = gql`
 `
 
 const GET_TASKS_QUERY = gql`
-  query TaskPaginationQuery($after: Int!, $first: Int!){
-    tasksPagination(after: $after, first: $first) {
+  query TaskQuery($after: Int!, $first: Int!){
+    tasks(after: $after, first: $first) {
       payload {
         id
         description

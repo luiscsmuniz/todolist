@@ -2,19 +2,12 @@
 
 module Types
   class QueryType < Types::BaseObject
-    field :tasks, [TaskType], null: false
-
-    def tasks
-      Task.order(created_at: :desc)
-    end
-
-    field :tasks_pagination, TaskCollectionType, null: false do
-      description 'Pagination'
+    field :tasks, TaskCollectionType, null: false do
       argument :after, Integer, required: true
       argument :first, Integer, required: true
     end
 
-    def tasks_pagination(after:, first:)
+    def tasks(after:, first:)
       tasks = Task.where('tasks.id > :id', id: after).limit(first)
       payload = []
       tasks.each do |task|

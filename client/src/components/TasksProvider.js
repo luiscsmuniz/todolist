@@ -25,8 +25,8 @@ class TasksProvider extends Component {
   refetchTasks = async ({ after, first }) => {
     const tasks = await this.props.taskService.all({ after, first })
     this.setState({
-      tasks: tasks.data.tasksPagination.payload,
-      hasNextPage: tasks.data.tasksPagination.pageInfo.hasNextPage,
+      tasks: tasks.data.tasks.payload,
+      hasNextPage: tasks.data.tasks.pageInfo.hasNextPage,
     })
   }
 
@@ -35,9 +35,9 @@ class TasksProvider extends Component {
     this.setState(prevState => ({
       tasks: [
         ...prevState.tasks,
-        ...tasks.data.tasksPagination.payload,
+        ...tasks.data.tasks.payload,
       ],
-      hasNextPage: tasks.data.tasksPagination.pageInfo.hasNextPage,
+      hasNextPage: tasks.data.tasks.pageInfo.hasNextPage,
     }))
   }
 
