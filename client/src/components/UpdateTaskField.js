@@ -5,17 +5,13 @@ import PropTypes from 'prop-types'
 import withTaskService from '../hoc/withTaskService'
 
 class UpdateTaskField extends Component {
-  static defaultProps = {
-    onUpdate: () => {},
-  }
-
   static propTypes = {
-    onUpdate: PropTypes.func,
     tasks: PropTypes.objectOf(Object).isRequired,
   }
 
   state = {
     editing: false,
+    inputText: this.props.tasks.description,
   }
 
   handleEditMode = () => {
@@ -39,11 +35,9 @@ class UpdateTaskField extends Component {
 
   updateTask = async (input) => {
     const task = await this.props.taskService.update({ input })
-
-    this.props.onUpdate()
-
     this.setState({
       editing: false,
+      inputText: input.description,
     })
 
     return task
@@ -56,14 +50,14 @@ class UpdateTaskField extends Component {
           type="text"
           autoFocus
           onKeyDown={this.handleKeyDownTask}
-          defaultValue={this.props.tasks.description}
+          defaultValue={this.state.inputText}
         />
       )
     }
 
     return (
       <div onDoubleClick={this.handleEditMode}>
-        {this.props.tasks.description}
+        {this.state.inputText}
       </div>
     )
   }
