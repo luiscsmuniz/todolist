@@ -41,7 +41,7 @@ export default class ListTask extends Component {
               }
               {hasNextPage ? (
                 <ListGroupItem className="text-center">
-                  <Button color="link" onClick={() => loadMore({ after: tasks.slice(-1)[0].id, first: 5 })}>Carregar mais</Button>
+                  <Button color="link" onClick={() => loadMore({ after: tasks.pop().id, first: 5 })}>Carregar mais</Button>
                 </ListGroupItem>
               ) : false }
             </ListGroup>

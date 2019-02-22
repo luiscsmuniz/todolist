@@ -31,7 +31,7 @@ class TasksProvider extends Component {
   }
 
   loadMore = async ({ after, first }) => {
-    const tasks = await this.props.taskService.all({ after: parseInt(after, 10), first })
+    const tasks = await this.props.taskService.all({ after: Number(after), first })
     this.setState(prevState => ({
       tasks: [
         ...prevState.tasks,

@@ -35,6 +35,7 @@ class UpdateTaskField extends Component {
 
   updateTask = async (input) => {
     const task = await this.props.taskService.update({ input })
+    this.props.onUpdate(task)
     this.setState({
       editing: false,
       inputText: input.description,

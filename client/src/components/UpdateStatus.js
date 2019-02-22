@@ -26,6 +26,7 @@ class UpdateStatus extends Component {
 
   updateStatus = async (input) => {
     const task = await this.props.taskService.update({ input })
+    this.props.onUpdate(task)
     this.setState({
       checked: input.status,
     })
