@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import styled from 'styled-components'
-import { ListGroup, ListGroupItem } from 'reactstrap'
+import { ListGroup, ListGroupItem, Button } from 'reactstrap'
 import UpdateTaskField from './UpdateTaskField'
 import UpdateStatus from './UpdateStatus'
 import DeleteTaskButton from './DeleteTaskButton'
@@ -18,7 +18,7 @@ export default class ListTask extends Component {
   render() {
     return (
       <TasksContext.Consumer>
-        {({ tasks, refetchTasks, getFilteredTasks }) => (
+        {({ tasks, refetchTasks, getFilteredTasks, hasNextPage, loadMore }) => (
           <List marginTop="20">
             <ListGroup>
               {
@@ -26,16 +26,24 @@ export default class ListTask extends Component {
                 <ListGroupItem key={task.id}>
                   <UpdateTaskField
                     tasks={task}
-                    onUpdate={refetchTasks}
+                    onUpdate={() => refetchTasks({ after: 0, first: 5 })}
                   />
                   <UpdateStatus
                     tasks={task}
-                    onUpdate={refetchTasks}
+                    onUpdate={() => refetchTasks({ after: 0, first: 5 })}
                   />
-                  <DeleteTaskButton onDelete={refetchTasks} id={task.id} />
+                  <DeleteTaskButton
+                    onDelete={() => refetchTasks({ after: 0, first: 5 })}
+                    id={task.id}
+                  />
                 </ListGroupItem>
               ))
               }
+              {hasNextPage ? (
+                <ListGroupItem className="text-center">
+                  <Button color="link" onClick={() => loadMore({ after: tasks.slice(-1)[0].id, first: 5 })}>Carregar mais</Button>
+                </ListGroupItem>
+              ) : false }
             </ListGroup>
           </List>
         )}

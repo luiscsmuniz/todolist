@@ -15,18 +15,30 @@ Body.defaultProps = {
 
 class TasksProvider extends Component {
   componentDidMount() {
-    this.refetchTasks()
+    this.refetchTasks({ after: 0, first: 5 })
   }
 
   onRadioClick = (filter) => {
     this.setState({ filter })
   }
 
-  refetchTasks = async () => {
-    const task = await this.props.taskService.all()
+  refetchTasks = async ({ after, first }) => {
+    const tasks = await this.props.taskService.all({ after, first })
     this.setState({
-      tasks: task.data.tasks,
+      tasks: tasks.data.tasksPagination.payload,
+      hasNextPage: tasks.data.tasksPagination.pageInfo.hasNextPage,
     })
+  }
+
+  loadMore = async ({ after, first }) => {
+    const tasks = await this.props.taskService.all({ after: parseInt(after, 10), first })
+    this.setState(prevState => ({
+      tasks: [
+        ...prevState.tasks,
+        ...tasks.data.tasksPagination.payload,
+      ],
+      hasNextPage: tasks.data.tasksPagination.pageInfo.hasNextPage,
+    }))
   }
 
   getFilteredTasks = (tasks) => (
@@ -41,10 +53,12 @@ class TasksProvider extends Component {
   // eslint-disable-next-line react/sort-comp
   state = {
     tasks: [],
+    hasNextPage: false,
     refetchTasks: this.refetchTasks,
     filter: 'ALL',
     getFilteredTasks: this.getFilteredTasks,
     onRadioClick: this.onRadioClick,
+    loadMore: this.loadMore,
   }
 
   render() {

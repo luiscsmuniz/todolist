@@ -5,7 +5,7 @@ module Types
     field :tasks, [TaskType], null: false
 
     def tasks
-      Task.all
+      Task.order(created_at: :desc)
     end
 
     field :tasks_pagination, TaskCollectionType, null: false do
@@ -25,11 +25,11 @@ module Types
         )
       end
 
-      next_page = payload.any? && Task.where('tasks.id > :id', id: payload.last[:id]) ? true : false
+      next_page = payload.any? ? Task.where('tasks.id > :id', id: payload.last[:id]).count : false
 
       {
         payload: payload,
-        page_info: { has_next_page: next_page },
+        page_info: { has_next_page: next_page >= first },
       }
     end
   end
