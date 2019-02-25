@@ -7,6 +7,7 @@ import withTaskService from '../hoc/withTaskService'
 class UpdateTaskField extends Component {
   static propTypes = {
     tasks: PropTypes.objectOf(Object).isRequired,
+    onUpdate: PropTypes.func.isRequired,
   }
 
   state = {

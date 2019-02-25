@@ -21,11 +21,11 @@ export default class ListTask extends Component {
     return (
       <TasksContext.Consumer>
         {({ tasks, getFilteredTasks, hasNextPage, loadMore, updateTask, deleteTask }) => (
-          <List marginTop="20">
+          <List marginTop="10">
             <ListGroup>
               {
               getFilteredTasks(tasks).map((task) => (
-                <ListGroupItem key={task.id}>
+                <ListGroupItem action key={task.id}>
                   <UpdateTaskField
                     tasks={task}
                     onUpdate={updateTask}

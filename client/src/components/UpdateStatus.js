@@ -11,6 +11,7 @@ const status = {
 class UpdateStatus extends Component {
   static propTypes = {
     tasks: PropTypes.objectOf(Object).isRequired,
+    onUpdate: PropTypes.func.isRequired,
   }
 
   state = {

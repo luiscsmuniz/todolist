@@ -7,13 +7,9 @@ import { FaTrash } from 'react-icons/fa'
 import withTaskService from '../hoc/withTaskService'
 
 class DeleteTaskButton extends Component {
-  static defaultProps = {
-    onDelete: () => {},
-  }
-
   static propTypes = {
     id: PropTypes.string.isRequired,
-    onDelete: PropTypes.func,
+    onDelete: PropTypes.func.isRequired,
   }
 
   handleDelete = () => {

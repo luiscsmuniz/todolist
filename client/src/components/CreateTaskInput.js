@@ -6,12 +6,11 @@ import withTaskService from '../hoc/withTaskService'
 class CreateTaskInput extends PureComponent {
   static defaultProps = {
     placeholder: 'Digite a tarefa',
-    onCreate: () => {},
   }
 
   static propTypes = {
     placeholder: PropTypes.string,
-    onCreate: PropTypes.func,
+    onCreate: PropTypes.func.isRequired,
   }
 
   state = {
