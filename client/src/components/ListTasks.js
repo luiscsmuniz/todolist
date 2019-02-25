@@ -15,10 +15,12 @@ List.defaultProps = {
 }
 
 export default class ListTask extends Component {
+  last = (task) => task.slice(-1)[0].id
+
   render() {
     return (
       <TasksContext.Consumer>
-        {({ tasks, refetchTasks, getFilteredTasks, hasNextPage, loadMore }) => (
+        {({ tasks, getFilteredTasks, hasNextPage, loadMore, updateTask, deleteTask }) => (
           <List marginTop="20">
             <ListGroup>
               {
@@ -26,14 +28,14 @@ export default class ListTask extends Component {
                 <ListGroupItem key={task.id}>
                   <UpdateTaskField
                     tasks={task}
-                    onUpdate={() => refetchTasks({ after: 0, first: 5 })}
+                    onUpdate={updateTask}
                   />
                   <UpdateStatus
                     tasks={task}
-                    onUpdate={() => refetchTasks({ after: 0, first: 5 })}
+                    onUpdate={updateTask}
                   />
                   <DeleteTaskButton
-                    onDelete={() => refetchTasks({ after: 0, first: 5 })}
+                    onDelete={deleteTask}
                     id={task.id}
                   />
                 </ListGroupItem>
@@ -41,7 +43,7 @@ export default class ListTask extends Component {
               }
               {hasNextPage ? (
                 <ListGroupItem className="text-center">
-                  <Button color="link" onClick={() => loadMore({ after: tasks.pop().id, first: 5 })}>Carregar mais</Button>
+                  <Button color="link" onClick={() => loadMore({ after: this.last(tasks), first: 5 })}>Carregar mais</Button>
                 </ListGroupItem>
               ) : false }
             </ListGroup>

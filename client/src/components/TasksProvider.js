@@ -41,6 +41,27 @@ class TasksProvider extends Component {
     }))
   }
 
+  updateTask = (task) => {
+    const { tasks } = this.state
+    const update = tasks.map((stateTask) => {
+      if (stateTask.id === task.data.updateTask.id) {
+        return task.data.updateTask
+      }
+      return stateTask
+    })
+
+    this.setState({
+      tasks: update,
+    })
+  }
+
+  deleteTask = (task) => {
+    const { tasks } = this.state
+    this.setState({
+      tasks: tasks.filter((stateTask => stateTask.id !== task.data.deleteTask.id)),
+    })
+  }
+
   getFilteredTasks = (tasks) => (
     tasks.filter((task) => {
       if (this.state.filter === 'ALL') {
@@ -59,6 +80,9 @@ class TasksProvider extends Component {
     getFilteredTasks: this.getFilteredTasks,
     onRadioClick: this.onRadioClick,
     loadMore: this.loadMore,
+    updateTask: this.updateTask,
+    deleteTask: this.deleteTask,
+    createTask: this.createTask,
   }
 
   render() {

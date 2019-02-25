@@ -8,21 +8,15 @@ module Types
     end
 
     def tasks(after:, first:)
-      tasks = Task.where('tasks.id > :id', id: after).limit(first)
-      payload = []
-      tasks.each do |task|
-        payload.push(
-          id: task.id,
-          description: task.description,
-          status: task.status,
-        )
-      end
+      tasks = Task.where('tasks.id > :id', id: after)
+        .order(created_at: :asc)
+        .limit(first)
 
-      next_page = payload.any? ? Task.where('tasks.id > :id', id: payload.last[:id]).count : false
-      p next_page
+      has_next_page = tasks.to_a.any? && Task.where('tasks.id > :id', id: tasks.last[:id]).exists?
+
       {
-        payload: payload,
-        page_info: { has_next_page: next_page >= 1 },
+        payload: tasks,
+        page_info: { has_next_page: has_next_page },
       }
     end
   end
