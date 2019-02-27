@@ -15,30 +15,30 @@ RSpec.describe ServerSchema do
   end
 
   describe 'Queries' do
-    let!(:task) { @task = FactoryBot.create(:task) }
-    let(:query_string) do
-      %|
-        query TaskQuery($after: Int!, $first: Int!){
-          tasks(after: $after, first: $first){
-            payload{
-              id
-              description
-              status
+    context 'Get tasks' do
+      let!(:task) { @task = FactoryBot.create(:task) }
+      let(:query_string) do
+        %|
+          query TaskQuery($after: Int!, $first: Int!){
+            tasks(after: $after, first: $first){
+              payload{
+                id
+                description
+                status
+              }
             }
           }
+        |
+      end
+
+      let(:variables) do
+        {
+          after: 0,
+          first: 5,
         }
-      |
-    end
+      end
 
-    let(:variables) do
-      {
-        after: 0,
-        first: 5,
-      }
-    end
-
-    context 'GET tasks' do
-      it '#tasks' do
+      it 'when to get the tasks' do
         result['data']['tasks']['payload'].each do |r|
           expect(r['id'].to_i).to eq(@task.id)
           expect(r['description']).to eq(@task.description)
