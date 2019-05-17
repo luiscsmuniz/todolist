@@ -22,12 +22,12 @@ const App = () => (
     <Body color="#282c34">
       <Container>
         <Row>
-          <TaskTitle title="Todolist" fontSize={4} color="white" size={10} offset={1} />
+          <TaskTitle title="Todolist" fontSize={3} color="white" size={10} offset={1} />
         </Row>
         <Row>
           <TasksContext.Consumer>
             {({ refetchTasks }) => (
-              <CreateTaskInput placeholder="Digite sua tarefa..." onCreate={refetchTasks} />
+              <CreateTaskInput placeholder="Digite sua tarefa..." onCreate={() => refetchTasks({ after: 0, first: 5 })} />
             )}
           </TasksContext.Consumer>
         </Row>

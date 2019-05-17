@@ -3,16 +3,13 @@ import { Button } from 'reactstrap'
 import PropTypes from 'prop-types'
 import { confirmAlert } from 'react-confirm-alert'
 import 'react-confirm-alert/src/react-confirm-alert.css'
+import { FaTrash } from 'react-icons/fa'
 import withTaskService from '../hoc/withTaskService'
 
 class DeleteTaskButton extends Component {
-  static defaultProps = {
-    onDelete: () => {},
-  }
-
   static propTypes = {
     id: PropTypes.string.isRequired,
-    onDelete: PropTypes.func,
+    onDelete: PropTypes.func.isRequired,
   }
 
   handleDelete = () => {
@@ -49,7 +46,7 @@ class DeleteTaskButton extends Component {
         value={this.props.id}
         onClick={this.handleDelete}
       >
-        Excluir
+        <FaTrash />
       </Button>
     )
   }

@@ -15,17 +15,50 @@ Body.defaultProps = {
 
 class TasksProvider extends Component {
   componentDidMount() {
-    this.refetchTasks()
+    this.refetchTasks({ after: 0, first: 5 })
   }
 
   onRadioClick = (filter) => {
     this.setState({ filter })
   }
 
-  refetchTasks = async () => {
-    const task = await this.props.taskService.all()
+  refetchTasks = async ({ after, first }) => {
+    const tasks = await this.props.taskService.all({ after, first })
     this.setState({
-      tasks: task.data.tasks,
+      tasks: tasks.data.tasks.payload,
+      hasNextPage: tasks.data.tasks.pageInfo.hasNextPage,
+    })
+  }
+
+  loadMore = async ({ after, first }) => {
+    const tasks = await this.props.taskService.all({ after: Number(after), first })
+    this.setState(prevState => ({
+      tasks: [
+        ...prevState.tasks,
+        ...tasks.data.tasks.payload,
+      ],
+      hasNextPage: tasks.data.tasks.pageInfo.hasNextPage,
+    }))
+  }
+
+  updateTask = (task) => {
+    const { tasks } = this.state
+    const update = tasks.map((stateTask) => {
+      if (stateTask.id === task.data.updateTask.id) {
+        return task.data.updateTask
+      }
+      return stateTask
+    })
+
+    this.setState({
+      tasks: update,
+    })
+  }
+
+  deleteTask = (task) => {
+    const { tasks } = this.state
+    this.setState({
+      tasks: tasks.filter((stateTask => stateTask.id !== task.data.deleteTask.id)),
     })
   }
 
@@ -41,10 +74,15 @@ class TasksProvider extends Component {
   // eslint-disable-next-line react/sort-comp
   state = {
     tasks: [],
+    hasNextPage: false,
     refetchTasks: this.refetchTasks,
     filter: 'ALL',
     getFilteredTasks: this.getFilteredTasks,
     onRadioClick: this.onRadioClick,
+    loadMore: this.loadMore,
+    updateTask: this.updateTask,
+    deleteTask: this.deleteTask,
+    createTask: this.createTask,
   }
 
   render() {

@@ -40,11 +40,16 @@ const DELETE_TASK_MUTATION = gql`
 `
 
 const GET_TASKS_QUERY = gql`
-  {
-    tasks {
-      id
-      description
-      status
+  query TaskQuery($after: Int!, $first: Int!){
+    tasks(after: $after, first: $first) {
+      payload {
+        id
+        description
+        status
+      }
+      pageInfo {
+        hasNextPage
+      }
     }
   }
 `
@@ -58,16 +63,17 @@ const withTaskService = WrappedComponent => class extends PureComponent {
   }))
 
   // eslint-disable-next-line react/sort-comp
-  query = (query) => this.props.client.query({
+  query = _.curry((query, variables) => this.props.client.query({
     fetchPolicy: 'no-cache',
     query,
-  })
+    variables,
+  }))
 
   taskService = {
     update: this.createMutate(UPDATE_TASK_MUTATION),
     create: this.createMutate(CREATE_TASK_MUTATION),
     delete: this.createMutate(DELETE_TASK_MUTATION),
-    all: () => this.query(GET_TASKS_QUERY),
+    all: this.query(GET_TASKS_QUERY),
   }
 
   render() {

@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Col } from 'reactstrap'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { FaTasks } from 'react-icons/fa'
 
 const Title = styled.h1`
   font-size: ${props => props.fontSize}em;
@@ -36,7 +37,14 @@ export default class TaskTitle extends Component {
   render() {
     return (
       <Col md={{ size: this.props.size, offset: this.props.offset }}>
-        <Title fontSize={this.props.fontSize} color={this.props.color}>{this.props.title}</Title>
+        <Title
+          fontSize={this.props.fontSize}
+          color={this.props.color}
+        >
+          <FaTasks />
+          {' '}
+          {this.props.title}
+        </Title>
       </Col>
     )
   }

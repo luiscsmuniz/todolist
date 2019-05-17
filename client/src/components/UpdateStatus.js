@@ -9,13 +9,13 @@ const status = {
   inProgress: 'IN_PROGRESS',
 }
 class UpdateStatus extends Component {
-  static defaultProps = {
-    onUpdate: () => {},
-  }
-
   static propTypes = {
     tasks: PropTypes.objectOf(Object).isRequired,
-    onUpdate: PropTypes.func,
+    onUpdate: PropTypes.func.isRequired,
+  }
+
+  state = {
+    checked: this.props.tasks.status,
   }
 
   handleChecked = (checked) => {
@@ -27,9 +27,10 @@ class UpdateStatus extends Component {
 
   updateStatus = async (input) => {
     const task = await this.props.taskService.update({ input })
-
     this.props.onUpdate(task)
-
+    this.setState({
+      checked: input.status,
+    })
     return task
   }
 
@@ -37,7 +38,7 @@ class UpdateStatus extends Component {
     return (
       <Switch
         onChange={this.handleChecked}
-        checked={this.props.tasks.status === status.completed}
+        checked={this.state.checked === status.completed}
       />
     )
   }
