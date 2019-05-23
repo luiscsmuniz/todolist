@@ -1,32 +1,44 @@
-import React, { Component } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import React from 'react'
+import { Container, Row, Col } from 'reactstrap'
+import styled from 'styled-components'
+import TaskTitle from './components/TaskTitle'
+import CreateTaskInput from './components/CreateTaskInput'
+import withTaskService from './hoc/withTaskService'
+import FilterTask from './components/FilterTask'
+import TasksContext from './components/TasksContext'
+import TasksProvider from './components/TasksProvider'
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit
-            {' '}
-            <code>src/App.js</code>
-            {' '}
-and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
-    )
-  }
+const Body = styled.div`
+  background-color: ${props => props.color};
+  min-height: 100vh;
+`
+
+Body.defaultProps = {
+  color: '#282c34',
 }
 
-export default App
+const App = () => (
+  <TasksProvider>
+    <Body color="#282c34">
+      <Container>
+        <Row>
+          <TaskTitle title="Todolist" fontSize={3} color="white" size={10} offset={1} />
+        </Row>
+        <Row>
+          <TasksContext.Consumer>
+            {({ refetchTasks }) => (
+              <CreateTaskInput placeholder="Digite sua tarefa..." onCreate={() => refetchTasks({ after: 0, first: 5 })} />
+            )}
+          </TasksContext.Consumer>
+        </Row>
+        <Row>
+          <Col md={{ size: 10, offset: 1 }}>
+            <FilterTask />
+          </Col>
+        </Row>
+      </Container>
+    </Body>
+  </TasksProvider>
+)
+
+export default withTaskService(App)
