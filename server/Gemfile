@@ -38,7 +38,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 
 gem 'mysql2', '~> 0.5.2'
 
-gem 'rack-cors', '~> 1.0.2'
+gem 'rack-cors', '~> 1.0.5'
 
 gem 'graphql', '~> 1.9.1'
 
