@@ -11,7 +11,7 @@
     "bootstrap": "^4.2.1",
     "graphql": "^14.1.1",
     "graphql-tag": "^2.10.1",
-    "lodash": "^4.17.11",
+    "lodash": "^4.17.19",
     "prop-types": "^15.7.2",
     "react": "^16.8.1",
     "react-apollo": "^2.4.1",
